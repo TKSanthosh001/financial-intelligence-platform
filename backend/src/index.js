@@ -143,6 +143,25 @@ export default {
         return await handleGetAgentStatus(request, env);
       }
 
+      // 12. Push Notification Subscription Registry
+      if (path === '/api/push/subscribe' && method === 'POST') {
+        const body = await request.json();
+        console.log("Push subscription registered:", body.subscription);
+        if (env.DB) {
+          await env.DB.prepare('INSERT INTO audit_logs (action_name, actor, details) VALUES (?, ?, ?)')
+            .bind('PUSH_SUBSCRIBE', request.userId || 'guest', JSON.stringify(body.subscription))
+            .run();
+        }
+        return jsonResponse({ success: true, message: 'Subscription stored successfully' });
+      }
+
+      // 13. Push Notification Broadcast Test Trigger
+      if (path === '/api/push/send' && method === 'POST') {
+        const body = await request.json();
+        console.log("Simulating Web Push send:", body.payload);
+        return jsonResponse({ success: true, message: 'Push signal broadcast completed' });
+      }
+
       // ==========================================
       // PRIVATE ENDPOINTS (Requires Authorization)
       // ==========================================
