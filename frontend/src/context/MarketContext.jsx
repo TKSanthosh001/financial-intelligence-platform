@@ -76,32 +76,9 @@ export const MarketProvider = ({ children }) => {
 
   const fetchTimelineData = async () => {
     try {
-      return await api.market.getStatus().then(() => {
-        // Just return mock timeline from api client helper
-        // Since api client handles '/timeline'
-        return fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8787/api'}/timeline`)
-          .then(res => res.json())
-          .catch(() => {
-            // Mock fallback
-            return [
-              {
-                period: 'Today',
-                events: [
-                  { time: '03:30 PM', title: 'Nifty closes at 24,235.45 (+0.59%)', desc: 'Heavy buying in private banking heavyweights (HDFC Bank, ICICI Bank) lifted the index in the last hour.' },
-                  { time: '11:00 AM', title: 'Brent Crude spikes above $82.40', desc: 'Geopolitical threats trigger worries over ocean shipping freight rates.' }
-                ]
-              },
-              {
-                period: 'Yesterday',
-                events: [
-                  { time: '05:30 PM', title: 'FIIs sell net ₹3,400 Crore, DIIs buy ₹2,900 Crore', desc: 'DIIs absorption prevents Nifty from sliding below its 20-DMA support.' },
-                  { time: '02:00 PM', title: 'RBI Repo Rate announcement', desc: 'Repo rate kept at 6.5%, reinforcing monetary discipline.' }
-                ]
-              }
-            ];
-          });
-      });
+      return await api.timeline.get();
     } catch (e) {
+      console.error('Failed to load timeline:', e);
       return [];
     }
   };

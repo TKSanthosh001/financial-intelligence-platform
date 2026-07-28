@@ -125,6 +125,9 @@ export const api = {
   globalEvents: {
     getTracker: () => request('/global-events'),
   },
+  timeline: {
+    get: () => request('/timeline'),
+  },
   auth: {
     googleLogin: (credential) => request('/auth/google', { method: 'POST', body: JSON.stringify({ credential }) }),
   }

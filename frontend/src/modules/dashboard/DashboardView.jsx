@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Grid, Card, CardContent, Typography, ButtonGroup, Button, Paper, Collapse, IconButton } from '@mui/material';
+import { Box, Grid, Card, CardContent, Typography, ButtonGroup, Button, Paper, Collapse, IconButton, Divider } from '@mui/material';
 import { useMarket } from '../../context/MarketContext';
 import EChartsTrend from '../../components/EChartsTrend';
 import FearGreedGauge from '../../components/FearGreedGauge';
