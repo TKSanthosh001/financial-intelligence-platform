@@ -1,19 +1,28 @@
 import React, { useState } from 'react';
-import { Box, Grid, Card, CardContent, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip } from '@mui/material';
+import { Box, Grid, Card, CardContent, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip, Alert, AlertTitle } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import AddIcon from '@mui/icons-material/Add';
 import { useMarket } from '../../context/MarketContext';
 import TrendIndicator from '../../components/TrendIndicator';
+import { mockWatchlists } from '../../services/mockDataService';
 
 export const WatchlistView = () => {
-  const { watchlists, loading } = useMarket();
+  const { watchlists: realWatchlists, loading } = useMarket();
   const [newSymbol, setNewSymbol] = useState('');
   const [activeWatchlistIndex, setActiveWatchlistIndex] = useState(0);
+
+  const isGuest = !realWatchlists || realWatchlists.length === 0;
+  const watchlists = isGuest ? mockWatchlists : realWatchlists;
 
   if (loading || !watchlists || watchlists.length === 0) return null;
 
   const handleAddSymbol = (e) => {
     e.preventDefault();
+    if (isGuest) {
+      alert('Watchlist is in Guest Demo mode. Please Sign In at the top right to start tracking your own tickers.');
+      setNewSymbol('');
+      return;
+    }
     if (!newSymbol) return;
     
     // Simulate adding watch item to mock list
@@ -32,6 +41,12 @@ export const WatchlistView = () => {
 
   return (
     <Box sx={{ animation: 'fadeIn 0.5s ease-out' }}>
+      {isGuest && (
+        <Alert severity="info" sx={{ mb: 3, border: '1px solid #2962ff', bgcolor: 'rgba(41, 98, 255, 0.05)' }}>
+          <AlertTitle sx={{ fontWeight: 800 }}>DEMO SANDBOX ACTIVE</AlertTitle>
+          You are viewing Watchlists in Guest Mode. Please click <strong>Sign In</strong> at the top right to start monitoring and receiving custom alert summaries for your own stock picks.
+        </Alert>
+      )}
       <Box sx={{ borderLeft: '4px solid #2962ff', pl: 1.5, mb: 3 }}>
         <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
           AI Watchlists

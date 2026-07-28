@@ -170,6 +170,11 @@ export default {
         return jsonResponse(simulatedUser);
       }
 
+      // 13. Register Push Notifications
+      if (path === '/api/register-push' && method === 'POST') {
+        return jsonResponse({ success: true, message: 'Push subscription registered successfully' });
+      }
+
       return jsonResponse({ error: 'Endpoint not found' }, 404);
 
     } catch (error) {

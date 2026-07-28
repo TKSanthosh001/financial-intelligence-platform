@@ -6,10 +6,14 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import * as echarts from 'echarts';
 import { useMarket } from '../../context/MarketContext';
 import TrendIndicator from '../../components/TrendIndicator';
+import { mockPortfolio } from '../../services/mockDataService';
 
 export const PortfolioView = () => {
-  const { portfolio, addHolding, loading } = useMarket();
+  const { portfolio: realPortfolio, addHolding, loading } = useMarket();
   const chartRef = useRef(null);
+
+  const isGuest = !realPortfolio || !realPortfolio.aiAnalysis;
+  const portfolio = isGuest ? mockPortfolio : realPortfolio;
 
   // Form State
   const [symbol, setSymbol] = useState('');
@@ -93,6 +97,11 @@ export const PortfolioView = () => {
     setFormError('');
     setFormSuccess('');
 
+    if (isGuest) {
+      setFormError('Portfolio is in Guest Demo mode. Please Sign In at the top right to start tracking your own assets.');
+      return;
+    }
+
     if (!symbol || !name || !category || !avgPrice || !qty) {
       setFormError('All fields are required.');
       return;
@@ -133,6 +142,12 @@ export const PortfolioView = () => {
 
   return (
     <Box sx={{ animation: 'fadeIn 0.5s ease-out' }}>
+      {isGuest && (
+        <Alert severity="info" sx={{ mb: 3, border: '1px solid #2962ff', bgcolor: 'rgba(41, 98, 255, 0.05)' }}>
+          <AlertTitle sx={{ fontWeight: 800 }}>DEMO SANDBOX ACTIVE</AlertTitle>
+          You are viewing the Portfolio dashboard in Guest Mode. Please click <strong>Sign In</strong> at the top right to start tracking and analyzing your own real investments.
+        </Alert>
+      )}
       <Box sx={{ borderLeft: '4px solid #2962ff', pl: 1.5, mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
         <Box>
           <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>

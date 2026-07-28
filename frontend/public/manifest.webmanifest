@@ -1,0 +1,28 @@
+{
+  "short_name": "Aegis Intel",
+  "name": "Aegis Financial Intelligence Platform",
+  "icons": [
+    {
+      "src": "logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "background_color": "#0c101b",
+  "theme_color": "#2962ff",
+  "display": "standalone",
+  "orientation": "portrait"
+}

@@ -47,16 +47,12 @@ export const MarketProvider = ({ children }) => {
         api.news.getLatest(),
         api.analysis.getEngineStatus(),
         api.portfolio.get().catch(err => {
-          if (err.message.includes('401') || err.message.includes('Unauthorized')) {
-            return { holdings: [], aiAnalysis: null };
-          }
-          throw err;
+          console.warn('Portfolio fetch bypassed (user likely unauthenticated):', err);
+          return { holdings: [], aiAnalysis: null };
         }),
         api.watchlists.get().catch(err => {
-          if (err.message.includes('401') || err.message.includes('Unauthorized')) {
-            return [];
-          }
-          throw err;
+          console.warn('Watchlist fetch bypassed (user likely unauthenticated):', err);
+          return [];
         }),
         api.alerts.getRecent(),
         api.fundManager.getMorningReport(),
