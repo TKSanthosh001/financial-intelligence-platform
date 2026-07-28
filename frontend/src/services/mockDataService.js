@@ -283,3 +283,25 @@ export const mockGlobalEvents = [
     impactEmerging: 'Volatile: Shifts in US dollar strength directly affect global credit conditions.'
   }
 ];
+
+export const mockSwingOpportunities = [
+  { ticker: 'INFY', company: 'Infosys Limited', swing_score: 88, entry_zone: '₹1,500 - ₹1,515', exit_zone: '₹1,620 - ₹1,650', stop_loss: '₹1,455', holding_period: '5-12 Days', risk_score: 35, momentum_score: 85, volume_score: 90, confidence: 'High', reasoning: 'Golden cross 20-EMA over 50-EMA. Heavy volume breakout following positive Q1 guidance. Delivery % is 68.4%.' },
+  { ticker: 'TCS', company: 'Tata Consultancy Services', swing_score: 84, entry_zone: '₹4,120 - ₹4,150', exit_zone: '₹4,380 - ₹4,420', stop_loss: '₹4,010', holding_period: '7-14 Days', risk_score: 30, momentum_score: 82, volume_score: 84, confidence: 'High', reasoning: 'Channel consolidation breakout with expanding MACD histogram. US rate-cut prospects driving tech inflows.' },
+  { ticker: 'HDFCBANK', company: 'HDFC Bank Ltd.', swing_score: 81, entry_zone: '₹1,600 - ₹1,612', exit_zone: '₹1,710 - ₹1,740', stop_loss: '₹1,550', holding_period: '10-20 Days', risk_score: 40, momentum_score: 79, volume_score: 88, confidence: 'High', reasoning: 'Double bottom reversal pattern confirmed on daily chart. FII net buyers over the last 3 consecutive sessions.' },
+  { ticker: 'RELIANCE', company: 'Reliance Industries Ltd.', swing_score: 79, entry_zone: '₹2,560 - ₹2,580', exit_zone: '₹2,720 - ₹2,750', stop_loss: '₹2,490', holding_period: '7-15 Days', risk_score: 42, momentum_score: 78, volume_score: 80, confidence: 'Moderate', reasoning: 'Support bounce at 50-day EMA. Green energy arm announcements providing catalyst.' }
+];
+
+export const mockMarketScans = [
+  { id: 1, ticker: 'INFY', name: 'Infosys Limited', category: 'Volume Breakout', value: '3.4x 20-DMA Volume', price: '₹1,512.60', change: '+3.45%', rsi: 64, ema20: '₹1,480', ema50: '₹1,435', vwap: '₹1,505', deliveryPct: '68.4%', summary: 'High delivery accumulation observed. Price closed above upper Bollinger Band with ADX strength at 28.5.' },
+  { id: 2, ticker: 'TCS', name: 'Tata Consultancy Services', category: 'Golden Cross', value: 'EMA 20 > EMA 50', price: '₹4,150.20', change: '+1.28%', rsi: 58, ema20: '₹4,090', ema50: '₹4,020', vwap: '₹4,135', deliveryPct: '59.2%', summary: 'Golden Cross confirmed. 20-day EMA crossed above 50-day EMA accompanied by expanding volume histogram on MACD.' },
+  { id: 3, ticker: 'RELIANCE', name: 'Reliance Industries Ltd', category: 'Golden Cross', value: 'EMA 50 > EMA 200', price: '₹2,580.40', change: '+0.85%', rsi: 55, ema20: '₹2,540', ema50: '₹2,510', vwap: '₹2,572', deliveryPct: '52.1%', summary: 'Long-term trend reversal signal. Price holding above VWAP support line with declining volatility index.' },
+  { id: 4, ticker: 'HDFCBANK', name: 'HDFC Bank Ltd', category: 'Price Breakout', value: '52-Wk Resistance Breakout', price: '₹1,610.20', change: '+2.15%', rsi: 68, ema20: '₹1,570', ema50: '₹1,540', vwap: '₹1,602', deliveryPct: '71.5%', summary: 'Broke out of 8-month horizontal channel resistance at 1,590. Strong institutional delivery buying detected.' }
+];
+
+export const mockInstitutionalFlows = [
+  { flow_date: '2026-07-28', fii_net: 1420.50, dii_net: 2150.80 },
+  { flow_date: '2026-07-27', fii_net: -850.20, dii_net: 1940.30 },
+  { flow_date: '2026-07-26', fii_net: 310.40, dii_net: 1120.00 },
+  { flow_date: '2026-07-25', fii_net: -1240.00, dii_net: 2850.60 },
+  { flow_date: '2026-07-24', fii_net: 950.00, dii_net: 1410.20 }
+];

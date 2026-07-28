@@ -1,34 +1,21 @@
-// Aegis Financial Platform - Service Worker
+// Aegis Financial Platform - Service Worker (v2 Cache Invalidation)
 
-const CACHE_NAME = 'aegis-intel-cache-v1';
-const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
-  './manifest.webmanifest',
-  './logo.svg'
-];
+const CACHE_NAME = 'aegis-intel-cache-v2';
 
 // Install Event
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('SW: Pre-caching static assets');
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
-  );
+  console.log('SW: Installing Service Worker v2');
   self.skipWaiting();
 });
 
-// Activate Event
+// Activate Event - Instantly purge all old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
         keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            console.log('SW: Removing old cache:', key);
-            return caches.delete(key);
-          }
+          console.log('SW: Purging old cache:', key);
+          return caches.delete(key);
         })
       );
     })
@@ -36,26 +23,17 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch Event - Network First with Cache Fallback
+// Fetch Event - Pure Network First (Never cache HTML or API data)
 self.addEventListener('fetch', (event) => {
-  // Only intercept HTTP/S GET requests
-  if (event.request.method !== 'GET' || !event.request.url.startsWith(self.location.origin)) {
-    return;
+  if (event.request.method !== 'GET') return;
+  
+  // Skip caching for HTML documents and Workers API requests
+  if (event.request.mode === 'navigate' || event.request.url.includes('.workers.dev')) {
+    return; // Pass through to live network
   }
 
   event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        // Cache the newly retrieved asset
-        return caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, response.clone());
-          return response;
-        });
-      })
-      .catch(() => {
-        // Fallback to cache if offline
-        return caches.match(event.request);
-      })
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });
 
@@ -96,7 +74,6 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
-      // Focus existing tab if open, otherwise open new
       for (let client of windowClients) {
         if ('focus' in client) {
           return client.focus();

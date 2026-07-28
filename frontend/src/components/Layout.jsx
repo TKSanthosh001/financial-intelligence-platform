@@ -17,6 +17,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import { useAuth } from '../context/AuthContext';
 import { useMarket } from '../context/MarketContext';
 
@@ -72,6 +73,7 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
 
   const menuItems = [
     { id: 'dashboard', text: 'Dashboard', icon: <DashboardIcon /> },
+    { id: 'agents', text: 'AI Agent Network', icon: <AccountTreeIcon /> },
     { id: 'scanner', text: 'AI Market Scanner', icon: <FlashOnIcon /> },
     { id: 'news', text: 'AI Analyzed News', icon: <NewspaperIcon /> },
     { id: 'portfolio', text: 'Santhosh Portfolio Manager', icon: <AccountBalanceWalletIcon /> },

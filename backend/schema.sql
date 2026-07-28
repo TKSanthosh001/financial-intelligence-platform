@@ -106,3 +106,45 @@ CREATE TABLE IF NOT EXISTS sector_rankings (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Agent Logs & Memory Table
+CREATE TABLE IF NOT EXISTS agent_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    agent_id INTEGER NOT NULL, -- Agent 1 to 12
+    agent_name TEXT NOT NULL,
+    status TEXT NOT NULL, -- 'Active', 'Idle', 'Executing'
+    memory_context TEXT, -- RAG Memory vector log summary
+    opinion_vote TEXT NOT NULL, -- 'Bullish', 'Bearish', 'Neutral'
+    confidence_score REAL NOT NULL,
+    evidence_payload TEXT NOT NULL, -- JSON stringified evidence
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Agent Learning & Accuracy Tracking Table
+CREATE TABLE IF NOT EXISTS agent_learning_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ticker TEXT NOT NULL,
+    action TEXT NOT NULL, -- 'Strong Buy Candidate', 'Buy Candidate', 'Accumulate', etc.
+    predicted_confidence REAL NOT NULL,
+    actual_outcome_pct REAL NOT NULL,
+    holding_days INTEGER NOT NULL,
+    success BOOLEAN NOT NULL, -- 1 for Win, 0 for Loss
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Paper Trading Orders Table
+CREATE TABLE IF NOT EXISTS paper_trading_orders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT NOT NULL,
+    ticker TEXT NOT NULL,
+    company TEXT NOT NULL,
+    order_type TEXT NOT NULL, -- 'BUY', 'SELL'
+    quantity REAL NOT NULL,
+    entry_price REAL NOT NULL,
+    stop_loss REAL NOT NULL,
+    target_price REAL NOT NULL,
+    status TEXT NOT NULL, -- 'OPEN', 'EXECUTED', 'TARGET_REACHED', 'STOP_HIT'
+    pnl REAL DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+

@@ -11,6 +11,7 @@ import NewsView from './modules/news/NewsView';
 import { PortfolioView } from './modules/portfolio/PortfolioView';
 import { WatchlistView } from './modules/watchlist/WatchlistView';
 import { ScannerView } from './modules/scanner/ScannerView';
+import { AgentsView } from './modules/agents/AgentsView';
 import AdvisorView from './modules/advisor/AdvisorView';
 import SectorsView from './modules/sectors/SectorsView';
 import GlobalEventsView from './modules/global/GlobalEventsView';
@@ -25,6 +26,8 @@ const AppContent = () => {
     switch (activeModule) {
       case 'dashboard':
         return <DashboardView />;
+      case 'agents':
+        return <AgentsView />;
       case 'scanner':
         return <ScannerView />;
       case 'news':
