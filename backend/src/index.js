@@ -175,6 +175,43 @@ export default {
         return jsonResponse({ success: true, message: 'Push subscription registered successfully' });
       }
 
+      // 14. Swing Opportunities
+      if (path === '/api/swing/opportunities' && method === 'GET') {
+        let opportunities = [];
+        if (env.DB) {
+          const { results } = await env.DB.prepare('SELECT * FROM swing_opportunities ORDER BY swing_score DESC').all();
+          opportunities = results;
+        } else {
+          opportunities = [
+            { ticker: 'INFY', company: 'Infosys Limited', swing_score: 88, risk_score: 15, momentum_score: 90, volume_score: 85, fundamental_score: 80, news_score: 85, institutional_score: 90, confidence: 'High', entry_zone: '₹1,350 - ₹1,365', exit_zone: '₹1,440 - ₹1,460', stop_loss: '₹1,310', holding_period: '5-10 Days', reasoning: 'Infosys shows strong relative strength against Nifty IT index. Consolidation breakout verified with 2.5x volume expansion.' }
+          ];
+        }
+        return jsonResponse(opportunities);
+      }
+
+      // 15. Market Scans
+      if (path === '/api/market/scans' && method === 'GET') {
+        let scans = [];
+        if (env.DB) {
+          const { results } = await env.DB.prepare('SELECT * FROM market_scans ORDER BY signal_time DESC LIMIT 50').all();
+          scans = results;
+        }
+        return jsonResponse(scans);
+      }
+
+      // 16. Institutional Flows
+      if (path === '/api/institutional/flows' && method === 'GET') {
+        let flows = [];
+        if (env.DB) {
+          const { results } = await env.DB.prepare('SELECT * FROM institutional_flows ORDER BY flow_date DESC LIMIT 30').all();
+          flows = results.map(f => ({
+            ...f,
+            sector_flows: f.sector_flows_json ? JSON.parse(f.sector_flows_json) : null
+          }));
+        }
+        return jsonResponse(flows);
+      }
+
       return jsonResponse({ error: 'Endpoint not found' }, 404);
 
     } catch (error) {
@@ -392,26 +429,34 @@ async function fetchAlerts(env) {
 }
 
 async function fetchMorningReport(env) {
+  const todayStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  let report = null;
+
   if (env.DB) {
     const row = await env.DB.prepare('SELECT content FROM cached_reports WHERE report_type = "morning_report"').first();
     if (row) {
-      return JSON.parse(row.content);
+      report = JSON.parse(row.content);
     }
   }
 
-  // Fallback default morning report
-  return {
-    date: 'July 28, 2026',
-    title: 'AI Good Morning Report',
-    marketSummary: 'Global cues are highly mixed this morning. US indices closed soft yesterday due to hardware tech profit booking, but the bond yields eased to 4.18%, signaling an impending rate cut cycle. Asian markets are opening flat.',
-    importantEvents: [
-      { event: 'US Core PCE Inflation data due tomorrow.', impact: 'High' }
-    ],
-    portfolioImpact: 'Your portfolio is well-positioned for today. The IT rebound will provide strength, offsetting any volatility in Reliance.',
-    todayRisks: 'Rising crude oil prices may trigger intraday profit booking in auto and aviation sectors.',
-    todayOpportunities: 'It is a good day to slowly accumulate defensive FMCG giants or Index ETFs during dips.',
-    thingsToWatch: ['USDINR trajectory near 83.75', 'FII net flows in first 2 hours']
-  };
+  if (!report) {
+    report = {
+      date: todayStr,
+      title: 'AI Good Morning Report',
+      marketSummary: 'Global cues are highly mixed this morning. US indices closed soft yesterday due to hardware tech profit booking, but the bond yields eased to 4.18%, signaling an impending rate cut cycle. Asian markets are opening flat.',
+      importantEvents: [
+        { event: 'US Core PCE Inflation data due tomorrow.', impact: 'High' }
+      ],
+      portfolioImpact: 'Your portfolio is well-positioned for today. The IT rebound will provide strength, offsetting any volatility in Reliance.',
+      todayRisks: 'Rising crude oil prices may trigger intraday profit booking in auto and aviation sectors.',
+      todayOpportunities: 'It is a good day to slowly accumulate defensive FMCG giants or Index ETFs during dips.',
+      thingsToWatch: ['USDINR trajectory near 83.75', 'FII net flows in first 2 hours']
+    };
+  } else {
+    report.date = todayStr; // Override with live date
+  }
+
+  return report;
 }
 
 async function queryAdvisor(env, question) {

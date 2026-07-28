@@ -72,7 +72,7 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
   const menuItems = [
     { id: 'dashboard', text: 'Dashboard', icon: <DashboardIcon /> },
     { id: 'news', text: 'AI Analyzed News', icon: <NewspaperIcon /> },
-    { id: 'portfolio', text: 'AI Portfolio Manager', icon: <AccountBalanceWalletIcon /> },
+    { id: 'portfolio', text: 'Santhosh Portfolio Manager', icon: <AccountBalanceWalletIcon /> },
     { id: 'watchlist', text: 'AI Watchlists', icon: <VisibilityIcon /> },
     { id: 'advisor', text: 'AI Investment Advisor', icon: <PsychologyIcon /> },
     { id: 'sectors', text: 'Sector Heatmap', icon: <PieChartIcon /> },
@@ -166,7 +166,7 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
                 color={getMoodColor(analysisEngine.marketMood)}
                 variant="outlined"
                 size="small"
-                sx={{ ml: 1, fontWeight: 700, border: '1px solid', height: 24, fontSize: '0.65rem' }}
+                sx={{ ml: 1, fontWeight: 700, border: '1px solid', height: 24, fontSize: '0.65rem', display: { xs: 'none', sm: 'inline-flex' } }}
               />
             )}
           </Box>
@@ -252,7 +252,8 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
           p: { xs: 2, md: 3 }, 
           width: { xs: '100%', md: `calc(100% - ${drawerWidth}px)` }, 
           minHeight: '100vh', 
-          pt: 11 
+          pt: 11,
+          overflowX: 'hidden' 
         }}
       >
         {children}

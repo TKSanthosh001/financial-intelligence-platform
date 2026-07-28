@@ -24,6 +24,9 @@ export const MarketProvider = ({ children }) => {
   const [sectors, setSectors] = useState([]);
   const [globalEvents, setGlobalEvents] = useState([]);
   const [timeline, setTimeline] = useState([]);
+  const [swingOpportunities, setSwingOpportunities] = useState([]);
+  const [marketScans, setMarketScans] = useState([]);
+  const [institutionalFlows, setInstitutionalFlows] = useState([]);
 
   const fetchAllData = useCallback(async () => {
     try {
@@ -41,7 +44,10 @@ export const MarketProvider = ({ children }) => {
         reportRes,
         sectorsRes,
         globalRes,
-        timelineRes
+        timelineRes,
+        swingRes,
+        scansRes,
+        flowsRes
       ] = await Promise.all([
         api.market.getStatus(),
         api.news.getLatest(),
@@ -58,7 +64,10 @@ export const MarketProvider = ({ children }) => {
         api.fundManager.getMorningReport(),
         api.sectors.getAnalysis(),
         api.globalEvents.getTracker(),
-        fetchTimelineData()
+        fetchTimelineData(),
+        api.swing.getOpportunities().catch(() => []),
+        api.swing.getScans().catch(() => []),
+        api.swing.getFlows().catch(() => [])
       ]);
 
       setMarketStatus(marketRes);
@@ -71,6 +80,9 @@ export const MarketProvider = ({ children }) => {
       setSectors(sectorsRes);
       setGlobalEvents(globalRes);
       setTimeline(timelineRes);
+      setSwingOpportunities(swingRes);
+      setMarketScans(scansRes);
+      setInstitutionalFlows(flowsRes);
       
     } catch (err) {
       console.error('Failed to load financial data:', err);
@@ -119,6 +131,9 @@ export const MarketProvider = ({ children }) => {
     sectors,
     globalEvents,
     timeline,
+    swingOpportunities,
+    marketScans,
+    institutionalFlows,
     refreshData: fetchAllData,
     addHolding
   };

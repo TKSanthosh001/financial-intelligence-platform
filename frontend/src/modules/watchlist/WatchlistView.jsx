@@ -80,8 +80,8 @@ export const WatchlistView = () => {
       <Grid container spacing={3}>
         {/* Watchlist Table */}
         <Grid item xs={12} lg={9}>
-          <TableContainer component={Paper} sx={{ border: '1px solid #2a2e39', mb: 3 }}>
-            <Table>
+          <TableContainer component={Paper} sx={{ border: '1px solid #2a2e39', mb: 3, overflowX: 'auto' }}>
+            <Table sx={{ minWidth: { xs: 600, md: 'auto' } }}>
               <TableHead>
                 <TableRow>
                   <TableCell>SYMBOL</TableCell>

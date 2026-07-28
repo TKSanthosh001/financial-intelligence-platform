@@ -128,6 +128,11 @@ export const api = {
   timeline: {
     get: () => request('/timeline'),
   },
+  swing: {
+    getOpportunities: () => request('/swing/opportunities'),
+    getScans: () => request('/market/scans'),
+    getFlows: () => request('/institutional/flows'),
+  },
   auth: {
     googleLogin: (credential) => request('/auth/google', { method: 'POST', body: JSON.stringify({ credential }) }),
   }

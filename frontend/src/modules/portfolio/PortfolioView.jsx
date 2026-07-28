@@ -151,7 +151,7 @@ export const PortfolioView = () => {
       <Box sx={{ borderLeft: '4px solid #2962ff', pl: 1.5, mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
         <Box>
           <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
-            AI Portfolio Manager
+            Santhosh Portfolio Manager
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
             Consolidated overview and AI diversification audit of your holdings.
@@ -208,8 +208,8 @@ export const PortfolioView = () => {
         {/* Left Side: Holdings and entry Form */}
         <Grid item xs={12} lg={8}>
           {/* Holdings Table */}
-          <TableContainer component={Paper} sx={{ border: '1px solid #2a2e39', mb: 4 }}>
-            <Table>
+          <TableContainer component={Paper} sx={{ border: '1px solid #2a2e39', mb: 4, overflowX: 'auto' }}>
+            <Table sx={{ minWidth: { xs: 650, md: 'auto' } }}>
               <TableHead>
                 <TableRow>
                   <TableCell>SYMBOL</TableCell>

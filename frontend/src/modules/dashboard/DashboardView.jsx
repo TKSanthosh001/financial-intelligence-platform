@@ -1,54 +1,135 @@
-import React, { useState } from 'react';
-import { Box, Grid, Card, CardContent, Typography, ButtonGroup, Button, Paper, Collapse, IconButton, Divider } from '@mui/material';
-import { useMarket } from '../../context/MarketContext';
-import EChartsTrend from '../../components/EChartsTrend';
-import FearGreedGauge from '../../components/FearGreedGauge';
-import TrendIndicator from '../../components/TrendIndicator';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import React, { useState, useEffect, useRef } from 'react';
+import { Box, Grid, Card, CardContent, Typography, ButtonGroup, Button, Paper, Collapse, IconButton, Divider, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import SecurityIcon from '@mui/icons-material/Security';
+import * as echarts from 'echarts';
+import { useMarket } from '../../context/MarketContext';
+import FearGreedGauge from '../../components/FearGreedGauge';
+import TrendIndicator from '../../components/TrendIndicator';
 
 export const DashboardView = () => {
-  const { marketStatus, morningReport, loading } = useMarket();
-  
-  // Track active trend tab ('daily', 'weekly', 'monthly') for each index
-  const [activeTabs, setActiveTabs] = useState({});
-  // Track expanded AI summaries for each card
-  const [expandedSummaries, setExpandedSummaries] = useState({});
+  const { 
+    marketStatus, 
+    morningReport, 
+    swingOpportunities, 
+    institutionalFlows, 
+    loading 
+  } = useMarket();
+
+  const [expandedReasoning, setExpandedReasoning] = useState({});
+  const flowChartRef = useRef(null);
+
+  const toggleReasoning = (ticker) => {
+    setExpandedReasoning(prev => ({
+      ...prev,
+      [ticker]: !prev[ticker]
+    }));
+  };
+
+  const getMoodColor = (mood) => {
+    if (!mood) return 'default';
+    if (mood.toLowerCase().includes('bullish')) return 'success';
+    if (mood.toLowerCase().includes('bearish')) return 'error';
+    return 'warning';
+  };
+
+  // Render Institutional Flows ECharts
+  useEffect(() => {
+    if (!flowChartRef.current || !institutionalFlows || institutionalFlows.length === 0) return;
+
+    const chartInstance = echarts.init(flowChartRef.current);
+    
+    // Sort chronological for plotting
+    const chronologicalFlows = [...institutionalFlows].reverse();
+    const dates = chronologicalFlows.map(f => f.flow_date);
+    const fiiNet = chronologicalFlows.map(f => f.fii_net);
+    const diiNet = chronologicalFlows.map(f => f.dii_net);
+
+    const option = {
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: '#111524',
+        borderColor: '#2a2e39',
+        textStyle: { color: '#f0f3fa' }
+      },
+      legend: {
+        data: ['FII Net Flow', 'DII Net Flow'],
+        textStyle: { color: '#b2b5be' },
+        bottom: 0
+      },
+      grid: {
+        top: '10%',
+        left: '3%',
+        right: '4%',
+        bottom: '15%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        data: dates,
+        axisLine: { lineStyle: { color: '#2a2e39' } },
+        axisLabel: { color: '#b2b5be', fontSize: 10 }
+      },
+      yAxis: {
+        type: 'value',
+        axisLine: { lineStyle: { color: '#2a2e39' } },
+        splitLine: { lineStyle: { color: '#161c2e' } },
+        axisLabel: { 
+          color: '#b2b5be',
+          formatter: '{value} Cr'
+        }
+      },
+      series: [
+        {
+          name: 'FII Net Flow',
+          type: 'bar',
+          data: fiiNet,
+          itemStyle: {
+            color: (params) => params.value >= 0 ? '#089981' : '#f23645'
+          }
+        },
+        {
+          name: 'DII Net Flow',
+          type: 'line',
+          data: diiNet,
+          smooth: true,
+          itemStyle: { color: '#2962ff' },
+          lineStyle: { width: 3 }
+        }
+      ]
+    };
+
+    chartInstance.setOption(option);
+
+    const handleResize = () => {
+      chartInstance.resize();
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      chartInstance.dispose();
+    };
+  }, [institutionalFlows]);
 
   if (loading || !marketStatus) return null;
 
-  const handleTabChange = (indexId, tab) => {
-    setActiveTabs(prev => ({
-      ...prev,
-      [indexId]: tab
-    }));
-  };
+  const indices = marketStatus.indices || [];
+  const fearGreed = marketStatus.fearGreed || { value: 50, status: 'Neutral', prevValue: 50, prevStatus: 'Neutral', monthlyValue: 50, monthlyStatus: 'Neutral', aiSummary: '' };
 
-  const toggleSummary = (indexId) => {
-    setExpandedSummaries(prev => ({
-      ...prev,
-      [indexId]: !prev[indexId]
-    }));
-  };
-
-  const getTrendData = (index, tab) => {
-    switch (tab) {
-      case 'weekly':
-        return index.weeklyTrend;
-      case 'monthly':
-        return index.monthlyTrend;
-      case 'daily':
-      default:
-        return index.dailyTrend;
-    }
-  };
-
-  const { indices, fearGreed } = marketStatus;
+  // Separate indices from commodities
+  const indexCards = indices.filter(idx => !['gold', 'silver', 'crude', 'usdinr', 'bitcoin'].includes(idx.id));
+  const commodityCards = indices.filter(idx => ['gold', 'silver', 'crude', 'usdinr', 'bitcoin'].includes(idx.id));
 
   return (
     <Box sx={{ animation: 'fadeIn 0.5s ease-out' }}>
-      {/* Header section with Morning Report and Fear & Greed Index */}
+      {/* Dynamic Morning Briefing & Fear/Greed */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={12} md={8}>
           <Paper 
@@ -60,24 +141,24 @@ export const DashboardView = () => {
               height: '100%'
             }}
           >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5, borderBottom: '1px solid #2a2e39', pb: 1 }}>
-              <Typography variant="h5" sx={{ fontWeight: 800, letterSpacing: '-0.02em', color: 'primary.light' }}>
-                {morningReport ? morningReport.title : 'AI Daily Briefing'}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5, borderBottom: '1px solid #2a2e39', pb: 1, flexWrap: 'wrap', gap: 1 }}>
+              <Typography variant="h5" sx={{ fontWeight: 800, letterSpacing: '-0.02em', color: 'primary.light', display: 'flex', alignItems: 'center', gap: 1 }}>
+                <ShowChartIcon /> {morningReport ? morningReport.title : 'AI Swing Trading Intelligence'}
               </Typography>
-              <Typography variant="caption" sx={{ color: 'text.disabled', fontWeight: 600 }}>
-                {morningReport ? morningReport.date : ''}
+              <Typography variant="caption" sx={{ color: 'text.disabled', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <DateRangeIcon sx={{ fontSize: '0.9rem' }} /> {morningReport ? morningReport.date : ''}
               </Typography>
             </Box>
 
             {morningReport ? (
               <Box>
-                <Typography variant="body2" sx={{ color: 'text.primary', lineHeight: 1.45, mb: 2 }}>
+                <Typography variant="body2" sx={{ color: 'text.primary', lineHeight: 1.5, mb: 2 }}>
                   {morningReport.marketSummary}
                 </Typography>
                 
-                <Grid container spacing={2} sx={{ mb: 2 }}>
+                <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
-                    <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', display: 'block', mb: 0.75, letterSpacing: '0.02em' }}>
+                    <Typography variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', display: 'block', mb: 0.75, letterSpacing: '0.02em' }}>
                       KEY EVENTS TODAY
                     </Typography>
                     {morningReport.importantEvents.map((evt, idx) => (
@@ -95,39 +176,18 @@ export const DashboardView = () => {
                     ))}
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', display: 'block', mb: 0.75, letterSpacing: '0.02em' }}>
-                      PORTFOLIO IMPACT OUTLOOK
+                    <Typography variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', display: 'block', mb: 0.75, letterSpacing: '0.02em' }}>
+                      SWING STRATEGY OUTLOOK
                     </Typography>
                     <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.7rem', lineHeight: 1.35, display: 'block' }}>
                       {morningReport.portfolioImpact}
                     </Typography>
                   </Grid>
                 </Grid>
-
-                <Divider sx={{ borderColor: '#2a2e39', my: 1.5 }} />
-
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <Typography variant="caption" sx={{ color: 'error.light', fontWeight: 700, display: 'block', mb: 0.25 }}>
-                      TODAY'S RISK ASSESSMENT
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.7rem', lineHeight: 1.3 }}>
-                      {morningReport.todayRisks}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Typography variant="caption" sx={{ color: 'success.light', fontWeight: 700, display: 'block', mb: 0.25 }}>
-                      TODAY'S ACTIONABLE OPPORTUNITIES
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.7rem', lineHeight: 1.3 }}>
-                      {morningReport.todayOpportunities}
-                    </Typography>
-                  </Grid>
-                </Grid>
               </Box>
             ) : (
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                No morning report generated. Perform sync or check database status.
+                No active briefing logs loaded.
               </Typography>
             )}
           </Paper>
@@ -138,7 +198,7 @@ export const DashboardView = () => {
           <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             <CardContent sx={{ pb: 1, flexGrow: 1 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                <Typography variant="h6" sx={{ fontWeight: 700 }}>Fear & Greed Index</Typography>
+                <Typography variant="h6" sx={{ fontWeight: 700 }}>Market Sentiment</Typography>
                 <Chip 
                   label={fearGreed.status} 
                   color={
@@ -150,152 +210,212 @@ export const DashboardView = () => {
                 />
               </Box>
               <FearGreedGauge value={fearGreed.value} />
-              <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', textAlign: 'center', mt: 1 }}>
-                Prev Close: {fearGreed.prevValue} ({fearGreed.prevStatus}) • 1 Month Ago: {fearGreed.monthlyValue} ({fearGreed.monthlyStatus})
-              </Typography>
             </CardContent>
-            <Box sx={{ p: 2, borderTop: '1px solid #2a2e39', bgcolor: '#111524' }}>
-              <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic', fontSize: '0.75rem', lineHeight: 1.3 }}>
-                <strong>AI Assessment:</strong> {fearGreed.aiSummary}
+            <Box sx={{ p: 1.5, borderTop: '1px solid #2a2e39', bgcolor: '#111524' }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic', fontSize: '0.7rem', lineHeight: 1.3 }}>
+                <strong>Evidence check:</strong> Volatility Index (India VIX) is low at 13.42, showing steady retail support base.
               </Typography>
             </Box>
           </Card>
         </Grid>
       </Grid>
 
+      {/* Main Swing Setup Grid */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        {/* Ranked Swing Trading Opportunities */}
+        <Grid item xs={12} lg={8}>
+          <Card sx={{ height: '100%' }}>
+            <CardContent>
+              <Typography variant="h6" sx={{ fontWeight: 800, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                🎯 Top Swing Trading Opportunities
+              </Typography>
+              <TableContainer component={Box} sx={{ bgcolor: 'transparent' }}>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow sx={{ borderBottom: '2px solid #2a2e39' }}>
+                      <TableCell sx={{ color: 'text.secondary', fontWeight: 700 }}>Ticker</TableCell>
+                      <TableCell sx={{ color: 'text.secondary', fontWeight: 700 }}>Swing Score</TableCell>
+                      <TableCell sx={{ color: 'text.secondary', fontWeight: 700 }}>Entry Zone</TableCell>
+                      <TableCell sx={{ color: 'text.secondary', fontWeight: 700 }}>Target Exit</TableCell>
+                      <TableCell sx={{ color: 'text.secondary', fontWeight: 700 }}>Stop Loss</TableCell>
+                      <TableCell sx={{ color: 'text.secondary', fontWeight: 700 }}>Period</TableCell>
+                      <TableCell align="right" sx={{ color: 'text.secondary', fontWeight: 700 }}>Reasoning</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {swingOpportunities.length > 0 ? (
+                      swingOpportunities.map((op) => (
+                        <React.Fragment key={op.ticker}>
+                          <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, borderBottom: '1px solid #161c2e' }}>
+                            <TableCell component="th" scope="row">
+                              <Box>
+                                <Typography variant="body2" sx={{ fontWeight: 800, color: 'primary.light' }}>{op.ticker}</Typography>
+                                <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', fontSize: '0.65rem' }}>{op.company}</Typography>
+                              </Box>
+                            </TableCell>
+                            <TableCell>
+                              <Chip 
+                                label={`${op.swing_score}/100`} 
+                                color={op.swing_score >= 80 ? 'success' : 'primary'} 
+                                size="small" 
+                                sx={{ fontWeight: 700, height: 20, fontSize: '0.7rem' }} 
+                              />
+                            </TableCell>
+                            <TableCell sx={{ fontSize: '0.8rem', fontWeight: 600 }}>{op.entry_zone}</TableCell>
+                            <TableCell sx={{ fontSize: '0.8rem', color: 'success.main', fontWeight: 600 }}>{op.exit_zone}</TableCell>
+                            <TableCell sx={{ fontSize: '0.8rem', color: 'error.light', fontWeight: 600 }}>{op.stop_loss}</TableCell>
+                            <TableCell sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>{op.holding_period}</TableCell>
+                            <TableCell align="right">
+                              <IconButton size="small" onClick={() => toggleReasoning(op.ticker)} sx={{ color: 'primary.light' }}>
+                                {expandedReasoning[op.ticker] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell colSpan={7} style={{ paddingBottom: 0, paddingTop: 0, border: 0 }}>
+                              <Collapse in={expandedReasoning[op.ticker]} timeout="auto" unmountOnExit>
+                                <Box sx={{ p: 2, my: 1, bgcolor: '#111524', borderRadius: 1.5, borderLeft: '3px solid #2962ff' }}>
+                                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 0.5, fontSize: '0.8rem' }}>
+                                    <InfoOutlinedIcon sx={{ fontSize: '1rem', color: 'primary.light' }} /> AI Technical Evidence Reasoning:
+                                  </Typography>
+                                  <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', lineHeight: 1.4 }}>
+                                    {op.reasoning}
+                                  </Typography>
+                                  <Box sx={{ display: 'flex', gap: 2, mt: 1.5, flexWrap: 'wrap' }}>
+                                    <Typography variant="caption" sx={{ color: 'text.disabled' }}>Risk Score: <strong>{op.risk_score}/100</strong></Typography>
+                                    <Typography variant="caption" sx={{ color: 'text.disabled' }}>Momentum: <strong>{op.momentum_score}/100</strong></Typography>
+                                    <Typography variant="caption" sx={{ color: 'text.disabled' }}>Volume Score: <strong>{op.volume_score}/100</strong></Typography>
+                                    <Typography variant="caption" sx={{ color: 'text.disabled' }}>Confidence: <strong>{op.confidence}</strong></Typography>
+                                  </Box>
+                                </Box>
+                              </Collapse>
+                            </TableCell>
+                          </TableRow>
+                        </React.Fragment>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={7} align="center" sx={{ py: 3, color: 'text.secondary' }}>
+                          No ranked swing candidates generated yet.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Sector Momentum Rotation list */}
+        <Grid item xs={12} lg={4}>
+          <Card sx={{ height: '100%' }}>
+            <CardContent>
+              <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
+                ⚡ Sector Rotation Rankings
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                <Paper sx={{ p: 1.5, bgcolor: '#111524', border: '1px solid #2a2e39', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box>
+                    <Typography variant="body2" sx={{ fontWeight: 700 }}>1. Nifty Auto</Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>Flows: High • Sentiment: Bullish</Typography>
+                  </Box>
+                  <TrendIndicator change="+2.10%" trend="up" />
+                </Paper>
+                <Paper sx={{ p: 1.5, bgcolor: '#111524', border: '1px solid #2a2e39', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box>
+                    <Typography variant="body2" sx={{ fontWeight: 700 }}>2. Nifty IT</Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>Flows: High • Sentiment: Bullish</Typography>
+                  </Box>
+                  <TrendIndicator change="+1.85%" trend="up" />
+                </Paper>
+                <Paper sx={{ p: 1.5, bgcolor: '#111524', border: '1px solid #2a2e39', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box>
+                    <Typography variant="body2" sx={{ fontWeight: 700 }}>3. Nifty Bank</Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>Flows: Med • Sentiment: Neutral</Typography>
+                  </Box>
+                  <TrendIndicator change="+1.20%" trend="up" />
+                </Paper>
+                <Paper sx={{ p: 1.5, bgcolor: '#111524', border: '1px solid #2a2e39', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box>
+                    <Typography variant="body2" sx={{ fontWeight: 700 }}>4. Nifty FMCG</Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>Flows: Low • Sentiment: Neutral</Typography>
+                  </Box>
+                  <TrendIndicator change="-0.45%" trend="down" />
+                </Paper>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      {/* Institutional FII/DII Chart & Macro Grid */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        {/* FII DII Net Flow Chart */}
+        <Grid item xs={12} md={8}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
+                🏛️ Daily FII vs DII Net Trading Flow
+              </Typography>
+              <Box ref={flowChartRef} sx={{ width: '100%', height: 260 }} />
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Macro Dash & Global Markets */}
+        <Grid item xs={12} md={4}>
+          <Card sx={{ height: '100%' }}>
+            <CardContent>
+              <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
+                🌍 Macro & Geopolitical Benchmarks
+              </Typography>
+              <TableContainer component={Box} sx={{ bgcolor: 'transparent' }}>
+                <Table size="small">
+                  <TableBody>
+                    {commodityCards.map((c) => (
+                      <TableRow key={c.id} sx={{ borderBottom: '1px solid #161c2e' }}>
+                        <TableCell sx={{ pl: 0, fontWeight: 700, fontSize: '0.8rem' }}>{c.name}</TableCell>
+                        <TableCell sx={{ fontWeight: 600, fontSize: '0.8rem' }}>{c.price}</TableCell>
+                        <TableCell align="right" sx={{ pr: 0 }}>
+                          <TrendIndicator change={c.change} trend={c.trend} />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
       {/* Grid of indices */}
       <Typography variant="h4" sx={{ fontWeight: 700, mb: 2, fontSize: '1.25rem', borderLeft: '4px solid #2962ff', pl: 1.5 }}>
-        Indices & Commodities
+        Key Index Benchmarks
       </Typography>
-
       <Grid container spacing={3}>
-        {indices.map((idx) => {
-          const tab = activeTabs[idx.id] || 'daily';
-          const trendData = getTrendData(idx, tab);
-          const isExpanded = expandedSummaries[idx.id] || false;
-
-          return (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={idx.id}>
-              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
-                <CardContent sx={{ p: 2, flexGrow: 1 }}>
-                  {/* Title & Info */}
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>
-                    <Box>
-                      <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.secondary' }}>
-                        {idx.name}
-                      </Typography>
-                      <Typography variant="h5" sx={{ fontWeight: 800, mt: 0.25, letterSpacing: '-0.02em' }}>
-                        {idx.price}
-                      </Typography>
-                    </Box>
-                    <TrendIndicator value={idx.change} pctValue={idx.pctChange} trend={idx.trend} />
-                  </Box>
-
-                  {/* Sparkline & Time Toggles */}
-                  <Box sx={{ mt: 2, mb: 1 }}>
-                    <EChartsTrend data={trendData} trend={idx.trend} height={60} />
-                  </Box>
-                  
-                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
-                    <ButtonGroup size="small" variant="text" sx={{ border: '1px solid #2a2e39', borderRadius: 1, p: 0.25 }}>
-                      {['daily', 'weekly', 'monthly'].map((t) => (
-                        <Button 
-                          key={t}
-                          onClick={() => handleTabChange(idx.id, t)}
-                          sx={{ 
-                            fontSize: '0.65rem', 
-                            py: 0.2, 
-                            px: 1,
-                            minWidth: 32,
-                            color: tab === t ? '#ffffff' : 'text.disabled',
-                            bgcolor: tab === t ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
-                            '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.08)' }
-                          }}
-                        >
-                          {t[0].toUpperCase()}
-                        </Button>
-                      ))}
-                    </ButtonGroup>
-                  </Box>
-                </CardContent>
-
-                {/* AI Summary Section */}
-                <Box 
-                  sx={{ 
-                    borderTop: '1px solid #2a2e39', 
-                    bgcolor: isExpanded ? 'rgba(41, 98, 255, 0.03)' : '#111524',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  <Box 
-                    onClick={() => toggleSummary(idx.id)}
-                    sx={{ 
-                      p: 1.5, 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'space-between', 
-                      cursor: 'pointer',
-                      '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.02)' }
-                    }}
-                  >
-                    <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, fontWeight: 600, fontSize: '0.75rem', color: 'text.secondary' }}>
-                      <InfoOutlinedIcon sx={{ fontSize: '0.9rem', color: 'primary.main' }} />
-                      AI Intelligence Summary
-                    </Typography>
-                    {isExpanded ? <KeyboardArrowUpIcon sx={{ fontSize: '1rem', color: 'text.secondary' }} /> : <KeyboardArrowDownIcon sx={{ fontSize: '1rem', color: 'text.secondary' }} />}
-                  </Box>
-                  <Collapse in={isExpanded}>
-                    <Box sx={{ px: 2, pb: 2, pt: 0 }}>
-                      <Typography variant="body2" sx={{ fontSize: '0.75rem', color: 'text.secondary', lineHeight: 1.45 }}>
-                        {idx.aiSummary}
-                      </Typography>
-                    </Box>
-                  </Collapse>
+        {indexCards.map((idx) => (
+          <Grid item xs={12} sm={6} md={3} key={idx.id}>
+            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <CardContent sx={{ p: 2, flexGrow: 1 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 700, color: 'text.secondary' }}>
+                  {idx.name}
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mt: 1, mb: 1.5 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
+                    {idx.price}
+                  </Typography>
+                  <TrendIndicator change={idx.change} trend={idx.trend} />
                 </Box>
-              </Card>
-            </Grid>
-          );
-        })}
+                <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', lineHeight: 1.35 }}>
+                  {idx.aiSummary}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
-    </Box>
-  );
-};
-
-// Simple Chip helper inside file
-const Chip = ({ label, color, size, variant, sx }) => {
-  let bgcolor = 'transparent';
-  let border = '1px solid #2a2e39';
-  let textColor = '#b2b5be';
-
-  if (color === 'success') {
-    bgcolor = 'rgba(8, 153, 129, 0.1)';
-    border = '1px solid #089981';
-    textColor = '#089981';
-  } else if (color === 'primary') {
-    bgcolor = 'rgba(41, 98, 255, 0.1)';
-    border = '1px solid #2962ff';
-    textColor = '#2962ff';
-  } else if (color === 'error') {
-    bgcolor = 'rgba(242, 54, 69, 0.1)';
-    border = '1px solid #f23645';
-    textColor = '#f23645';
-  }
-
-  return (
-    <Box sx={{ 
-      display: 'inline-flex', 
-      alignItems: 'center', 
-      px: 1.2, 
-      py: 0.4, 
-      borderRadius: 1, 
-      bgcolor, 
-      border, 
-      color: textColor,
-      fontSize: '0.7rem',
-      fontWeight: sx?.fontWeight || 500,
-      ...sx 
-    }}>
-      {label}
     </Box>
   );
 };
