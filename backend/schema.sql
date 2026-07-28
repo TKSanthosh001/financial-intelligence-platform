@@ -1,150 +1,297 @@
--- D1 SQLite database initialization schema
+-- Enterprise-Grade AI Multi-Agent Swing Trading Intelligence Platform Schema
+-- Normalized SQLite database for Cloudflare D1
 
--- Users Table
+-- 1. Users Table
 CREATE TABLE IF NOT EXISTS users (
-    id TEXT PRIMARY KEY,
+    id TEXT PRIMARY KEY, -- Firebase UID
     email TEXT UNIQUE NOT NULL,
     name TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Portfolio Table
-CREATE TABLE IF NOT EXISTS portfolio (
+-- 2. User Preferences Table
+CREATE TABLE IF NOT EXISTS user_preferences (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id TEXT NOT NULL,
-    symbol TEXT NOT NULL,
-    name TEXT NOT NULL,
-    category TEXT NOT NULL,
-    avg_price REAL NOT NULL,
-    quantity REAL NOT NULL,
+    user_id TEXT NOT NULL UNIQUE,
+    risk_appetite TEXT NOT NULL DEFAULT 'Moderate', -- 'Conservative', 'Moderate', 'Aggressive'
+    trading_style TEXT NOT NULL DEFAULT 'Swing', -- 'Swing', 'Position', 'Intraday'
+    preferred_sectors TEXT, -- JSON array of sectors
+    holding_period_days INTEGER DEFAULT 14,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Watchlist Table
-CREATE TABLE IF NOT EXISTS watchlist (
+-- 3. Settings Table
+CREATE TABLE IF NOT EXISTS settings (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id TEXT NOT NULL,
-    symbol TEXT NOT NULL,
+    user_id TEXT NOT NULL UNIQUE,
+    notifications_enabled BOOLEAN DEFAULT 1,
+    daily_brief_enabled BOOLEAN DEFAULT 1,
+    theme TEXT DEFAULT 'dark',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
-    UNIQUE(user_id, symbol)
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Alerts History log
-CREATE TABLE IF NOT EXISTS alerts_history (
+-- 4. Portfolio Table
+CREATE TABLE IF NOT EXISTS portfolio (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT 'Santhosh Portfolio Manager',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 5. Holdings Table (Multi-Asset)
+CREATE TABLE IF NOT EXISTS holdings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    portfolio_id INTEGER NOT NULL,
+    symbol TEXT NOT NULL,
+    name TEXT NOT NULL,
+    category TEXT NOT NULL, -- Sector / Asset Class
+    quantity REAL NOT NULL,
+    avg_price REAL NOT NULL,
+    asset_type TEXT NOT NULL, -- 'Stock', 'ETF', 'MutualFund', 'Crypto'
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(portfolio_id) REFERENCES portfolio(id) ON DELETE CASCADE
+);
+
+-- 6. Transactions Table
+CREATE TABLE IF NOT EXISTS transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    portfolio_id INTEGER NOT NULL,
+    symbol TEXT NOT NULL,
+    transaction_type TEXT NOT NULL, -- 'BUY', 'SELL'
+    quantity REAL NOT NULL,
+    price REAL NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(portfolio_id) REFERENCES portfolio(id) ON DELETE CASCADE
+);
+
+-- 7. Watchlists Table
+CREATE TABLE IF NOT EXISTS watchlists (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT NOT NULL,
+    name TEXT NOT NULL DEFAULT 'My Watchlist',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE(user_id, name)
+);
+
+-- 8. Watchlist Items Table
+CREATE TABLE IF NOT EXISTS watchlist_items (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    watchlist_id INTEGER NOT NULL,
+    symbol TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(watchlist_id) REFERENCES watchlists(id) ON DELETE CASCADE,
+    UNIQUE(watchlist_id, symbol)
+);
+
+-- 9. Stocks Table
+CREATE TABLE IF NOT EXISTS stocks (
+    id TEXT PRIMARY KEY, -- Ticker symbol
+    name TEXT NOT NULL,
+    industry TEXT,
+    exchange TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 10. Mutual Funds Table
+CREATE TABLE IF NOT EXISTS mutual_funds (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fund_name TEXT UNIQUE NOT NULL,
+    category TEXT, -- Midcap, Largecap, Debt etc.
+    exp_ratio REAL,
+    aum REAL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 11. ETFs Table
+CREATE TABLE IF NOT EXISTS etfs (
+    id TEXT PRIMARY KEY, -- Symbol
+    name TEXT NOT NULL,
+    tracking_index TEXT,
+    exp_ratio REAL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 12. Crypto Table
+CREATE TABLE IF NOT EXISTS crypto (
+    id TEXT PRIMARY KEY, -- Symbol
+    name TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 13. AI Reports Table (Orchestrator outputs)
+CREATE TABLE IF NOT EXISTS ai_reports (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    report_type TEXT NOT NULL, -- 'morning_brief', 'pre_market', 'closing_report', 'portfolio_audit'
+    title TEXT NOT NULL,
+    content_json TEXT NOT NULL, -- Large payload of evidence, confidence, risk metrics
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 14. News Table
+CREATE TABLE IF NOT EXISTS news (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    source TEXT,
+    summary TEXT,
+    nlp_sentiment TEXT NOT NULL, -- 'Positive', 'Negative', 'Neutral', 'Noise'
+    impact_level TEXT NOT NULL, -- 'High', 'Low'
+    affected_sectors_json TEXT, -- JSON array
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 15. Market Snapshots Table
+CREATE TABLE IF NOT EXISTS market_snapshots (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    index_name TEXT NOT NULL, -- 'Nifty', 'Sensex', 'Gold', 'VIX'
+    price TEXT NOT NULL,
+    change TEXT,
+    pct_change TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 16. Technical Indicators Table
+CREATE TABLE IF NOT EXISTS technical_indicators (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    symbol TEXT UNIQUE NOT NULL,
+    rsi REAL,
+    macd_line REAL,
+    macd_signal REAL,
+    ema_20 REAL,
+    ema_50 REAL,
+    ema_200 REAL,
+    vwap REAL,
+    adx REAL,
+    atr REAL,
+    bollinger_upper REAL,
+    bollinger_lower REAL,
+    supertrend_direction TEXT, -- 'up', 'down'
+    support_levels_json TEXT, -- JSON array of support zones
+    resistance_levels_json TEXT, -- JSON array of resistance zones
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 17. Fundamentals Table
+CREATE TABLE IF NOT EXISTS fundamentals (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    symbol TEXT UNIQUE NOT NULL,
+    revenue REAL,
+    profit REAL,
+    eps REAL,
+    debt_equity REAL,
+    roe REAL,
+    roce REAL,
+    pe_ratio REAL,
+    pb_ratio REAL,
+    valuation_status TEXT, -- 'Undervalued', 'Fair', 'Overvalued'
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 18. Macro Events Table
+CREATE TABLE IF NOT EXISTS macro_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_name TEXT NOT NULL,
+    metric_value TEXT,
+    country TEXT DEFAULT 'India',
+    impact_rating TEXT DEFAULT 'Medium', -- 'High', 'Medium', 'Low'
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 19. Geopolitical Events Table
+CREATE TABLE IF NOT EXISTS geopolitical_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    description TEXT,
+    affected_countries_json TEXT,
+    impact_rating TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 20. Institutional Flows Table
+CREATE TABLE IF NOT EXISTS institutional_flows (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    flow_date TEXT UNIQUE NOT NULL,
+    fii_net REAL, -- Crores
+    dii_net REAL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 21. Alerts Table (Trigger conditions)
+CREATE TABLE IF NOT EXISTS alerts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     symbol TEXT NOT NULL,
     title TEXT NOT NULL,
-    type TEXT NOT NULL,
+    alert_type TEXT NOT NULL, -- 'Breakout', 'SupportBreak', 'News'
     explanation TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    trigger_time DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Cached AI Reports (e.g. daily morning reports, sector statuses, analysis engine outputs)
-CREATE TABLE IF NOT EXISTS cached_reports (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    report_type TEXT NOT NULL UNIQUE, -- 'morning_report', 'market_mood_analysis', 'sector_trends', 'global_events'
-    content TEXT NOT NULL, -- JSON stringified contents
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- Seed basic data (optional/fallback)
-INSERT OR IGNORE INTO cached_reports (report_type, content) VALUES (
-    'morning_report',
-    '{"date":"July 28, 2026","title":"AI Good Morning Report","marketSummary":"Global cues are highly mixed this morning. US indices closed soft yesterday due to hardware tech profit booking, but the bond yields eased to 4.18%, signaling an impending rate cut cycle. Asian markets are opening flat. Nifty is expected to open slightly in the green (+30 points) tracking gift Nifty cues.","importantEvents":[{"event":"US Core PCE Inflation data due tomorrow (critical for Fed rate decisions).","impact":"High"},{"event":"Middle East geopolitical tensions escalating; Crude oil trades elevated at $82.40.","impact":"Medium"}],"portfolioImpact":"Your portfolio is well-positioned for today. The IT rebound (Infosys) will provide strength, offsetting any volatility in Reliance. Keep an eye on Tata Steel, as weak Chinese metal output numbers could pressure prices today.","todayRisks":"Rising crude oil prices may trigger intraday profit booking in auto and aviation sectors. Avoid adding new leverage positions in mid-caps today.","todayOpportunities":"It is a good day to slowly accumulate defensive FMCG giants (e.g., ITC) or Index ETFs during dips, as volatility might provide better entry pricing.","thingsToWatch":["USDINR trajectory near 83.75","FII net flows in the first 2 hours of trade"]}'
-);
-
--- Swing Opportunities Table
-CREATE TABLE IF NOT EXISTS swing_opportunities (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    ticker TEXT UNIQUE NOT NULL,
-    company TEXT NOT NULL,
-    swing_score REAL NOT NULL,
-    risk_score REAL NOT NULL,
-    momentum_score REAL NOT NULL,
-    volume_score REAL NOT NULL,
-    fundamental_score REAL NOT NULL,
-    news_score REAL NOT NULL,
-    institutional_score REAL NOT NULL,
-    confidence TEXT NOT NULL, -- 'High', 'Medium', 'Low'
-    entry_zone TEXT NOT NULL,
-    exit_zone TEXT NOT NULL,
-    stop_loss TEXT NOT NULL,
-    holding_period TEXT NOT NULL, -- e.g., '5-10 Days'
-    reasoning TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- Market Scans Table
-CREATE TABLE IF NOT EXISTS market_scans (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    ticker TEXT NOT NULL,
-    scan_type TEXT NOT NULL, -- 'High Relative Strength', 'Volume Breakout', 'Golden Cross', '52 Week High'
-    value TEXT,
-    signal_time DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- Institutional Flows Table
-CREATE TABLE IF NOT EXISTS institutional_flows (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    flow_date TEXT UNIQUE NOT NULL, -- 'YYYY-MM-DD'
-    fii_net REAL NOT NULL, -- Net buying/selling in Crores
-    dii_net REAL NOT NULL,
-    sector_flows_json TEXT, -- JSON string representing sector-wise FII flows
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- Sector Rankings Table
-CREATE TABLE IF NOT EXISTS sector_rankings (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    sector_name TEXT UNIQUE NOT NULL,
-    performance REAL NOT NULL, -- Percentage change
-    momentum_score REAL NOT NULL,
-    institutional_interest TEXT, -- 'High', 'Medium', 'Low'
-    news_sentiment TEXT, -- 'Bullish', 'Bearish', 'Neutral'
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- Agent Logs & Memory Table
-CREATE TABLE IF NOT EXISTS agent_logs (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    agent_id INTEGER NOT NULL, -- Agent 1 to 12
-    agent_name TEXT NOT NULL,
-    status TEXT NOT NULL, -- 'Active', 'Idle', 'Executing'
-    memory_context TEXT, -- RAG Memory vector log summary
-    opinion_vote TEXT NOT NULL, -- 'Bullish', 'Bearish', 'Neutral'
-    confidence_score REAL NOT NULL,
-    evidence_payload TEXT NOT NULL, -- JSON stringified evidence
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- Agent Learning & Accuracy Tracking Table
-CREATE TABLE IF NOT EXISTS agent_learning_history (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    ticker TEXT NOT NULL,
-    action TEXT NOT NULL, -- 'Strong Buy Candidate', 'Buy Candidate', 'Accumulate', etc.
-    predicted_confidence REAL NOT NULL,
-    actual_outcome_pct REAL NOT NULL,
-    holding_days INTEGER NOT NULL,
-    success BOOLEAN NOT NULL, -- 1 for Win, 0 for Loss
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- Paper Trading Orders Table
-CREATE TABLE IF NOT EXISTS paper_trading_orders (
+-- 22. Notifications Table
+CREATE TABLE IF NOT EXISTS notifications (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id TEXT NOT NULL,
-    ticker TEXT NOT NULL,
-    company TEXT NOT NULL,
-    order_type TEXT NOT NULL, -- 'BUY', 'SELL'
-    quantity REAL NOT NULL,
-    entry_price REAL NOT NULL,
-    stop_loss REAL NOT NULL,
-    target_price REAL NOT NULL,
-    status TEXT NOT NULL, -- 'OPEN', 'EXECUTED', 'TARGET_REACHED', 'STOP_HIT'
-    pnl REAL DEFAULT 0,
+    title TEXT NOT NULL,
+    body TEXT NOT NULL,
+    status TEXT DEFAULT 'Unread', -- 'Read', 'Unread'
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- 23. AI Conversations Table
+CREATE TABLE IF NOT EXISTS ai_conversations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT NOT NULL,
+    session_id TEXT NOT NULL,
+    message_role TEXT NOT NULL, -- 'user', 'assistant'
+    content TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 24. Trade Journal Table
+CREATE TABLE IF NOT EXISTS trade_journal (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT NOT NULL,
+    ticker TEXT NOT NULL,
+    trade_type TEXT NOT NULL, -- 'BUY', 'SELL'
+    qty REAL NOT NULL,
+    entry_price REAL NOT NULL,
+    exit_price REAL,
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 25. Strategies Table
+CREATE TABLE IF NOT EXISTS strategies (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT,
+    rules_json TEXT NOT NULL, -- Rules configuration
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 26. AI Memory Table (RAG Vector entries log)
+CREATE TABLE IF NOT EXISTS ai_memory (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT NOT NULL,
+    vector_key TEXT NOT NULL, -- Unique embedding hash or tag
+    context_text TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 27. Audit Logs Table
+CREATE TABLE IF NOT EXISTS audit_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    action_name TEXT NOT NULL,
+    actor TEXT NOT NULL,
+    details TEXT,
+    ip_address TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
