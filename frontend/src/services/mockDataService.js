@@ -2,18 +2,18 @@
 
 export const mockMarketStatus = {
   indices: [
-    { id: 'nifty', name: 'Nifty 50', price: '24,235.45', change: '+142.30', pctChange: '+0.59%', trend: 'up', dailyTrend: [24080, 24110, 24150, 24130, 24200, 24235], weeklyTrend: [23800, 23950, 24020, 24100, 24235], monthlyTrend: [23500, 23650, 23900, 24150, 24235], aiSummary: 'Nifty showed resilience above 24,100, supported by banking and IT index gains. Sector rotation from energy to auto was observed. Consolidation likely near 24,300.' },
-    { id: 'sensex', name: 'BSE Sensex', price: '79,475.20', change: '+451.90', pctChange: '+0.57%', trend: 'up', dailyTrend: [79000, 79150, 79220, 79180, 79400, 79475], weeklyTrend: [78200, 78600, 78900, 79100, 79475], monthlyTrend: [77400, 78100, 78700, 79300, 79475], aiSummary: 'Sensex rallied on short-covering in financials. Strong DII inflows offset mild FII selling. Next crucial resistance lies at 80,000.' },
-    { id: 'banknifty', name: 'Bank Nifty', price: '51,850.80', change: '+520.40', pctChange: '+1.01%', trend: 'up', dailyTrend: [51300, 51400, 51600, 51550, 51750, 51850], weeklyTrend: [50800, 51100, 51200, 51500, 51850], monthlyTrend: [49800, 50200, 51000, 51400, 51850], aiSummary: 'Outperformed broad market. Private banks led the surge post positive earnings commentary from top-tier lenders. Momentum remains bullish.' },
-    { id: 'nasdaq', name: 'NASDAQ 100', price: '19,420.15', change: '-120.45', pctChange: '-0.62%', trend: 'down', dailyTrend: [19550, 19500, 19480, 19410, 19430, 19420], weeklyTrend: [19680, 19550, 19610, 19500, 19420], monthlyTrend: [18900, 19200, 19700, 19550, 19420], aiSummary: 'Tech selloff continued on bond yield pressures and earnings caution ahead of mega-cap reports. Support at 19,250 is key.' },
-    { id: 'sp500', name: 'S&P 500', price: '5,510.30', change: '-18.20', pctChange: '-0.33%', trend: 'down', dailyTrend: [5530, 5525, 5520, 5502, 5515, 5510], weeklyTrend: [5560, 5530, 5545, 5525, 5510], monthlyTrend: [5400, 5450, 5550, 5530, 5510], aiSummary: 'S&P hovered in a tight range as defensive sectors (Utilities, FMCG) offset hardware tech weakness. Investors await Fed inflation data.' },
-    { id: 'dow', name: 'Dow Jones', price: '40,120.50', change: '+92.15', pctChange: '+0.23%', trend: 'up', dailyTrend: [40010, 40050, 40100, 40080, 40150, 40120], weeklyTrend: [39800, 39950, 40200, 40050, 40120], monthlyTrend: [39200, 39600, 40100, 39950, 40120], aiSummary: 'Dow closed higher, demonstrating relative strength. Capital flows rotation into value and industrials supported the index.' },
-    { id: 'gold', name: 'Gold (Oz)', price: '$2,415.60', change: '+28.40', pctChange: '+1.19%', trend: 'up', dailyTrend: [2385, 2390, 2402, 2398, 2410, 2415], weeklyTrend: [2360, 2380, 2375, 2395, 2415], monthlyTrend: [2320, 2350, 2380, 2400, 2415], aiSummary: 'Gold surged to near historic highs as geopolitical risk in West Asia intensified. Investors seek safe-haven assets.' },
-    { id: 'silver', name: 'Silver (Oz)', price: '$28.15', change: '+0.45', pctChange: '+1.62%', trend: 'up', dailyTrend: [27.7, 27.8, 27.95, 27.85, 28.1, 28.15], weeklyTrend: [27.2, 27.5, 27.8, 27.7, 28.15], monthlyTrend: [26.8, 27.4, 28.3, 27.8, 28.15], aiSummary: 'Industrial demand cues mixed, but precious metals rally carried silver higher. Target near-term resistance at $29.00.' },
-    { id: 'crude', name: 'Crude Oil (Brent)', price: '$82.40', change: '+1.85', pctChange: '+2.30%', trend: 'up', dailyTrend: [80.5, 81.1, 81.5, 81.8, 82.2, 82.4], weeklyTrend: [84.1, 82.5, 81.2, 81.9, 82.4], monthlyTrend: [85.2, 83.9, 82.0, 81.5, 82.4], aiSummary: 'Oil spiked over 2% due to tight supplies and geopolitical risk premium. Rising oil creates pressure on airlines, paint, and chemicals.' },
-    { id: 'usdinr', name: 'USD / INR', price: '83.72', change: '+0.08', pctChange: '+0.10%', trend: 'up', dailyTrend: [83.64, 83.68, 83.70, 83.69, 83.71, 83.72], weeklyTrend: [83.55, 83.62, 83.65, 83.70, 83.72], monthlyTrend: [83.35, 83.45, 83.60, 83.65, 83.72], aiSummary: 'Rupee edged lower on strong dollar index and steady FII outflows from local equities. RBI intervention capped further slide.' },
-    { id: 'bitcoin', name: 'Bitcoin (BTC)', price: '$66,840.00', change: '-1,150.00', pctChange: '-1.69%', trend: 'down', dailyTrend: [68000, 67500, 67200, 66500, 67000, 66840], weeklyTrend: [64000, 65800, 67200, 68100, 66840], monthlyTrend: [61000, 63000, 65000, 67500, 66840], aiSummary: 'Profit-taking dragged BTC down from resistance near $68.5k. Institutional ETF flows remain robust but cooling off.' },
-    { id: 'vix', name: 'India VIX', price: '13.42', change: '-0.38', pctChange: '-2.75%', trend: 'down', dailyTrend: [13.8, 13.7, 13.5, 13.6, 13.45, 13.42], weeklyTrend: [14.2, 13.9, 13.6, 13.5, 13.42], monthlyTrend: [12.5, 13.1, 14.8, 13.9, 13.42], aiSummary: 'Volatility index cooled off as markets consolidated gains. A VIX below 14 suggests low near-term fear but complacency risks.' }
+    { id: 'nifty', name: 'Nifty 50', price: '23,985.35', change: '-10.60', pctChange: '-0.04%', trend: 'down', dailyTrend: [24010, 23990, 24020, 23970, 23985], weeklyTrend: [23800, 23950, 24020, 24100, 23985], monthlyTrend: [23500, 23650, 23900, 24150, 23985], aiSummary: 'Nifty ended flat, down 0.04%, consolidation observed below 24,000 resistance. Support active at 23,900.' },
+    { id: 'sensex', name: 'BSE Sensex', price: '76,765.92', change: '-69.86', pctChange: '-0.09%', trend: 'down', dailyTrend: [76900, 76800, 76720, 76765], weeklyTrend: [76200, 76600, 76900, 77100, 76765], monthlyTrend: [75400, 76100, 76700, 77300, 76765], aiSummary: 'Sensex slid marginally by 0.09% as investors exercised caution ahead of upcoming central bank decisions.' },
+    { id: 'banknifty', name: 'Bank Nifty', price: '56,755.60', change: '-331.40', pctChange: '-0.58%', trend: 'down', dailyTrend: [57100, 56900, 56800, 56755], weeklyTrend: [56200, 56500, 56800, 57100, 56755], monthlyTrend: [55400, 55900, 56400, 56900, 56755], aiSummary: 'Outperformed by broad market but dragged down late session by private banking profit booking. Crucial support at 56,500.' },
+    { id: 'nasdaq', name: 'NASDAQ 100', price: '19,420.15', change: '-120.45', pctChange: '-0.62%', trend: 'down', dailyTrend: [19550, 19500, 19480, 19410, 19430, 19420], weeklyTrend: [19680, 19550, 19610, 19500, 19420], monthlyTrend: [18900, 19200, 19700, 19550, 19420], aiSummary: 'Tech selloff continued on bond yield pressures and earnings caution ahead of mega-cap reports.' },
+    { id: 'sp500', name: 'S&P 500', price: '5,510.30', change: '-18.20', pctChange: '-0.33%', trend: 'down', dailyTrend: [5530, 5525, 5520, 5502, 5515, 5510], weeklyTrend: [5560, 5530, 5545, 5525, 5510], monthlyTrend: [5400, 5450, 5550, 5530, 5510], aiSummary: 'S&P hovered in a tight range as defensive sectors offset hardware tech weakness.' },
+    { id: 'dow', name: 'Dow Jones', price: '40,120.50', change: '+92.15', pctChange: '+0.23%', trend: 'up', dailyTrend: [40010, 40050, 40100, 40080, 40150, 40120], weeklyTrend: [39800, 39950, 40200, 40050, 40120], monthlyTrend: [39200, 39600, 40100, 39950, 40120], aiSummary: 'Dow closed higher, demonstrating relative strength. Capital flows rotation into value.' },
+    { id: 'gold', name: 'Gold (Oz)', price: '$2,415.60', change: '+28.40', pctChange: '+1.19%', trend: 'up', dailyTrend: [2385, 2390, 2402, 2398, 2410, 2415], weeklyTrend: [2360, 2380, 2375, 2395, 2415], monthlyTrend: [2320, 2350, 2380, 2400, 2415], aiSummary: 'Gold surged to near historic highs as geopolitical risk in West Asia intensified.' },
+    { id: 'silver', name: 'Silver (Oz)', price: '$28.15', change: '+0.45', pctChange: '+1.62%', trend: 'up', dailyTrend: [27.7, 27.8, 27.95, 27.85, 28.1, 28.15], weeklyTrend: [27.2, 27.5, 27.8, 27.7, 28.15], monthlyTrend: [26.8, 27.4, 28.3, 27.8, 28.15], aiSummary: 'Industrial demand cues mixed, but precious metals rally carried silver higher.' },
+    { id: 'crude', name: 'Crude Oil (Brent)', price: '$83.51', change: '-1.45', pctChange: '-1.71%', trend: 'down', dailyTrend: [84.5, 84.1, 83.8, 83.51], weeklyTrend: [84.1, 83.9, 83.8, 83.51], monthlyTrend: [85.2, 83.9, 82.0, 81.5, 83.51], aiSummary: 'Brent crude traded down at $83.51 per barrel supporting local Emerging Market currencies.' },
+    { id: 'usdinr', name: 'USD / INR', price: '95.75', change: '-0.30', pctChange: '-0.31%', trend: 'down', dailyTrend: [96.05, 95.95, 95.85, 95.75], weeklyTrend: [96.25, 96.05, 95.85, 95.75], monthlyTrend: [96.50, 96.15, 95.75], aiSummary: 'Rupee opened stronger at 95.75, supported by RBI interventions and falling crude oil prices.' },
+    { id: 'bitcoin', name: 'Bitcoin (BTC)', price: '$63,200.00', change: '-950.00', pctChange: '-1.48%', trend: 'down', dailyTrend: [64150, 63800, 63400, 63200], weeklyTrend: [62800, 63500, 63200], monthlyTrend: [61000, 63000, 63200], aiSummary: 'BTC hovered near $63.2k with mild outflows.' },
+    { id: 'vix', name: 'India VIX', price: '13.42', change: '-0.38', pctChange: '-2.75%', trend: 'down', dailyTrend: [13.8, 13.7, 13.5, 13.6, 13.45, 13.42], weeklyTrend: [14.2, 13.9, 13.6, 13.5, 13.42], monthlyTrend: [12.5, 13.1, 14.8, 13.9, 13.42], aiSummary: 'Volatility index cooled off as markets consolidated gains. A VIX below 14 suggests low near-term fear.' }
   ],
   fearGreed: {
     value: 64,
@@ -22,84 +22,82 @@ export const mockMarketStatus = {
     prevStatus: 'Greed',
     monthlyValue: 48,
     monthlyStatus: 'Neutral',
-    aiSummary: 'Fear & Greed index rose to 64, indicating market participants are turning increasingly optimistic. FII short positions are covering, while retail leverage shows moderate build-up. Maintain caution on mid and small caps.'
+    aiSummary: 'Fear & Greed index rose to 64, indicating market participants are turning increasingly optimistic.'
   }
 };
 
 export const mockNews = [
   {
     id: 1,
-    title: 'Crude Oil Surges 2.3% as Middle East Tensions ESCALATE; Supply Lines Threat Looming',
-    source: 'Financial Express',
-    time: '2 hours ago',
-    type: 'Geopolitical / Crude Oil',
-    summary: 'Brent crude prices surged past $82 per barrel as tensions in West Asia escalated. Speculation of potential shipping disruptions in the Strait of Hormuz has forced premium adjustments.',
+    title: 'RBI Proposes Securitisation Rules Amendment: ₹1 Crore Minimum Investment in Demat Form Required',
+    source: 'Economic Times',
+    time: '30 mins ago',
+    type: 'RBI / Regulatory',
+    summary: 'The Reserve Bank of India has proposed draft amendments to securitisation transaction rules, prescribing a ₹1 crore minimum investment limit and dematerialised token distribution to start from October 1, 2026.',
     aiAnalysis: {
-      whatHappened: 'Brent crude rose 2.3% to $82.40/bbl due to escalating geopolitical tensions in West Asia and threats to marine shipping corridors.',
-      whyItMatters: 'Higher crude oil prices increase import bills for energy-dependent nations like India, leading to current account deficit pressures and higher domestic inflation.',
+      whatHappened: 'RBI proposed draft securitisation rules requiring demat-only issuance and high entry ticket sizes.',
+      whyItMatters: 'Forces transaction transparency and mitigates retail speculation risks in complex derivatives pools.',
       sectorsAffected: [
-        { name: 'Aviation', impact: 'negative', reason: 'Fuel represents 35-40% of operations costs; margins will contract.' },
-        { name: 'Paint & Chemicals', impact: 'negative', reason: 'Crude derivatives serve as core raw materials; input costs will rise.' },
-        { name: 'Oil Exploration (ONGC/Oil India)', impact: 'positive', reason: 'Realizations per barrel increase, leading to higher gross profit margins.' }
+        { name: 'Banking', impact: 'positive', reason: 'Better risk containment and structured asset books.' },
+        { name: 'NBFC / Housing Finance', impact: 'neutral', reason: 'Minimum tick size will restrict primary retail access.' }
       ],
-      shortTermImpact: 'Slightly negative sentiment for emerging markets; rising currency risk.',
-      longTermImpact: 'Could lead to sticky inflation if crude sustains above $85/bbl for more than a quarter, forcing central banks to hold rates high.',
-      confidenceScore: 92
+      shortTermImpact: 'Neutral to slightly positive for institutional credit desks.',
+      longTermImpact: 'Clean, transparent asset backing systems.',
+      confidenceScore: 94
     }
   },
   {
     id: 2,
-    title: 'US Federal Reserve Hints at Potential Interest Rate Cuts in Q3 Citing Easing CPI inflation',
-    source: 'Wall Street Journal',
-    time: '4 hours ago',
-    type: 'US Fed / Inflation',
-    summary: 'The Federal Reserve chair indicated that cooling inflation and softening labor markets are paving the way for rate cuts later this quarter, shifting from a hawkish to a balanced stance.',
+    title: 'Tata Communications and Tata Tele Business Partner to Build Unified AI Platform Stack for SMBs',
+    source: 'Moneycontrol',
+    time: '1 hour ago',
+    type: 'Corporate Alliance',
+    summary: 'Tata Communications and TTBS announced a strategic collaboration to construct a unified AI cloud platform stack targeted specifically for Small and Medium Businesses (SMBs) in India.',
     aiAnalysis: {
-      whatHappened: 'Federal Reserve signaled a pivot toward interest rate cuts starting September 2026, noting that inflation is steadily descending toward its 2% target.',
-      whyItMatters: 'A Fed rate cut weakens the USD, reduces global cost of capital, and prompts large institutional capital (FIIs) to flow back into emerging equity markets.',
+      whatHappened: 'Strategic partnership to deploy low-cost cloud AI tool stacks for SMBs.',
+      whyItMatters: 'Captures high-growth cloud market sectors, positioning Tata Tele strongly against competitors.',
       sectorsAffected: [
-        { name: 'IT Services', impact: 'positive', reason: 'US clients will increase discretionary spending as credit costs fall.' },
-        { name: 'Real Estate / Banking', impact: 'positive', reason: 'Domestic rate cuts often follow global cuts, stimulating loan demand.' }
+        { name: 'Telecom & Cloud', impact: 'positive', reason: 'Increases average revenue per user (ARPU).' },
+        { name: 'IT Infrastructure', impact: 'positive', reason: 'Increases node demand.' }
       ],
-      shortTermImpact: 'Highly bullish for global indices; bond yields will slip, supporting tech sector stock prices.',
-      longTermImpact: 'Lower borrowing rates globally will spur corporate investments and asset appreciation.',
-      confidenceScore: 88
+      shortTermImpact: 'Highly bullish for Tata Communications and Tata Tele stocks.',
+      longTermImpact: 'Sustained ARPU growth.',
+      confidenceScore: 89
     }
   },
   {
     id: 3,
-    title: 'RBI Monetary Policy Committee Maintains Status Quo: Repo Rate Kept Unchanged at 6.5%',
-    source: 'LiveMint',
-    time: '1 day ago',
-    type: 'RBI / Central Bank',
-    summary: 'The Reserve Bank of India decided to keep the benchmark repo rate at 6.5% for the tenth consecutive meeting, keeping their focus firmly on aligning inflation to the 4.0% medium-term target.',
+    title: 'Infosys Migrates NTN Corporation e-Commerce Engine to SAP Commerce Cloud',
+    source: 'Business Standard',
+    time: '2 hours ago',
+    type: 'IT Services Deal',
+    summary: 'Infosys announced the successful migration of NTN Corporation’s primary e-commerce platform and node stack to SAP Commerce Cloud, improving transaction throughput.',
     aiAnalysis: {
-      whatHappened: 'RBI kept key lending rates unchanged at 6.5% and maintained its stance of "withdrawal of accommodation".',
-      whyItMatters: 'Indicates the RBI is still cautious about food inflation risks and will not rush to cut rates before the Fed leads the way.',
+      whatHappened: 'Completion of high-profile SAP cloud migration deal.',
+      whyItMatters: 'Underlines Infosys technical lead and robust order execution capability.',
       sectorsAffected: [
-        { name: 'Banking & NBFCs', impact: 'neutral', reason: 'Net Interest Margins (NIM) remain stable; borrowing rates locked.' },
-        { name: 'Automobile', impact: 'slightly negative', reason: 'Auto loan rates will remain high, delaying retail demand recovery.' }
+        { name: 'IT Services', impact: 'positive', reason: 'Drives margin accretion and international visibility.' }
       ],
-      shortTermImpact: 'Neutral response expected from Nifty. Markets had factored in this decision.',
-      longTermImpact: 'Maintains rupee stability and capital market hygiene, preventing runaway domestic credit bubbles.',
-      confidenceScore: 95
+      shortTermImpact: 'Bullish for Infosys.',
+      longTermImpact: 'Improves recurring service contract revenue.',
+      confidenceScore: 92
     }
   },
   {
     id: 4,
-    title: 'Infosys Beats Q1 Earnings Estimates, Revises Annual Revenue Guidance Upwards',
-    source: 'Bloomberg Quint',
-    time: '2 days ago',
-    type: 'Earnings',
-    summary: 'Infosys reported a net profit growth of 5% QoQ, beating analyst consensus. The IT bellwether raised its constant currency revenue guidance to 3-4% for FY26-27, boosting IT sector sentiment.',
+    title: 'Zaggle Prepaid Signs Three-Year Partnership with Daimler India',
+    source: 'LiveMint',
+    time: '4 hours ago',
+    type: 'Corporate Contract',
+    summary: 'Zaggle Prepaid entered into a three-year corporate billing and card expenses management agreement with Daimler India.',
     aiAnalysis: {
-      whatHappened: 'Infosys beat expectations with strong deal wins and raised its yearly revenue growth guidance, lifting sector cloud.',
-      whyItMatters: 'Shows initial signs of recovery in US enterprise software spending, which has been stagnant for 18 months.',
+      whatHappened: 'Secured a 3-year contract with a major automotive multinational.',
+      whyItMatters: 'Validates expense management utility software suite viability for enterprise clients.',
       sectorsAffected: [
-        { name: 'IT Services (TCS, Wipro, HCL)', impact: 'positive', reason: 'Indicates industry-wide rebound and reassures global investors.' }
+        { name: 'Fintech Software', impact: 'positive', reason: 'Increases platform usage fees and transaction cut volumes.' }
       ],
-      shortTermImpact: 'Bullish for Nifty IT. Likely to drive index gains.',
-      longTermImpact: 'Restored confidence in high-margin Indian service sectors; potential salary hikes to boost local premium consumption.',
+      shortTermImpact: 'Bullish for Zaggle.',
+      longTermImpact: 'Secure recurring enterprise revenues.',
       confidenceScore: 90
     }
   }
