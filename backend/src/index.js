@@ -107,6 +107,43 @@ async function callGroqApi(env, prompt, systemMsg = "You are a senior hedge fund
   }
 }
 
+// Helper for OpenRouter API
+async function callOpenRouterApi(env, prompt, systemMsg = "You are a senior hedge fund advisor.") {
+  const apiKey = env.OPENROUTER_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+        'HTTP-Referer': 'https://tksanthosh001.github.io/',
+        'X-Title': 'Aegis Financial Platform'
+      },
+      body: JSON.stringify({
+        model: "meta-llama/llama-3.1-70b-instruct",
+        messages: [
+          { role: "system", content: systemMsg },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.2,
+        max_tokens: 1024
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`OpenRouter API error: ${response.status} ${await response.text()}`);
+    }
+
+    const data = await response.json();
+    return data.choices[0].message.content;
+  } catch (e) {
+    console.error("OpenRouter API call failed:", e);
+    return null;
+  }
+}
+
 // Router entry
 export default {
   // Cron Triggers handler
@@ -527,6 +564,9 @@ async function queryAdvisor(env, question) {
   const prompt = `Question: ${question}\nState today: Fear index is low (13.42), Brent Oil is rising ($82.4), Nifty consolidated at 24,235. Give personalized advice.`;
   
   let aiAnswer = await callGroqApi(env, prompt, systemMsg);
+  if (!aiAnswer) {
+    aiAnswer = await callOpenRouterApi(env, prompt, systemMsg);
+  }
   if (!aiAnswer) {
     aiAnswer = await callNvidiaNim(env, prompt, systemMsg);
   }
