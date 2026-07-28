@@ -1,8 +1,8 @@
 // API Client abstraction layer supporting both live backend endpoints and fallback mock data
 import * as mock from './mockDataService';
 
-const USE_MOCK = true; // Set to false to connect to Cloudflare Workers backend
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8787/api';
+const USE_MOCK = false; // Set to false to connect to Cloudflare Workers backend
+const API_BASE_URL = 'https://financial-intelligence-backend.santhosh-financial.workers.dev/api';
 
 // Helper to simulate network latency for mock data to provide realistic loading skeletons
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));

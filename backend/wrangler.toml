@@ -9,7 +9,7 @@ compatibility_date = "2024-01-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "financial-platform-db"
-database_id = "cf-d1-db-uuid-placeholder"
+database_id = "05be4ff7-8c36-425b-9ffa-891e95ff8e74"
 
 # Cron trigger for running the AI morning report every day at 6:00 AM
 [triggers]
