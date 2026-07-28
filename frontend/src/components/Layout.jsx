@@ -17,6 +17,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import { useAuth } from '../context/AuthContext';
 import { useMarket } from '../context/MarketContext';
@@ -110,17 +111,18 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
   };
 
   const menuItems = [
-    { id: 'dashboard', text: 'Dashboard', icon: <DashboardIcon /> },
-    { id: 'agents', text: 'AI Agent Network', icon: <AccountTreeIcon /> },
-    { id: 'scanner', text: 'AI Market Scanner', icon: <FlashOnIcon /> },
-    { id: 'news', text: 'AI Analyzed News', icon: <NewspaperIcon /> },
-    { id: 'portfolio', text: 'Santhosh Portfolio Manager', icon: <AccountBalanceWalletIcon /> },
-    { id: 'watchlist', text: 'AI Watchlists', icon: <VisibilityIcon /> },
-    { id: 'advisor', text: 'AI Investment Advisor', icon: <PsychologyIcon /> },
-    { id: 'sectors', text: 'Sector Heatmap', icon: <PieChartIcon /> },
-    { id: 'global', text: 'Geopolitical Risk', icon: <PublicIcon /> },
-    { id: 'alerts', text: 'Market Alerts', icon: <NotificationsActiveIcon /> },
-    { id: 'timeline', text: 'Market Timeline', icon: <TimelineIcon /> },
+    { id: 'dashboard', text: 'Dashboard',              icon: <DashboardIcon /> },
+    { id: 'research',  text: '🧠 Research Engine',     icon: <AutoAwesomeIcon sx={{ color: '#2962ff' }} /> },
+    { id: 'agents',    text: 'AI Agent Network',       icon: <AccountTreeIcon /> },
+    { id: 'scanner',   text: 'AI Market Scanner',      icon: <FlashOnIcon /> },
+    { id: 'news',      text: 'AI Analyzed News',       icon: <NewspaperIcon /> },
+    { id: 'portfolio', text: 'Portfolio Manager',       icon: <AccountBalanceWalletIcon /> },
+    { id: 'watchlist', text: 'AI Watchlists',          icon: <VisibilityIcon /> },
+    { id: 'advisor',   text: 'AI Advisor Chat',        icon: <PsychologyIcon /> },
+    { id: 'sectors',   text: 'Sector Heatmap',         icon: <PieChartIcon /> },
+    { id: 'global',    text: 'Geopolitical Risk',      icon: <PublicIcon /> },
+    { id: 'alerts',    text: 'Market Alerts',          icon: <NotificationsActiveIcon /> },
+    { id: 'timeline',  text: 'Market Timeline',        icon: <TimelineIcon /> },
   ];
 
   const drawerContent = (

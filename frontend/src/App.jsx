@@ -17,6 +17,7 @@ import SectorsView from './modules/sectors/SectorsView';
 import GlobalEventsView from './modules/global/GlobalEventsView';
 import AlertsView from './modules/alerts/AlertsView';
 import TimelineView from './modules/timeline/TimelineView';
+import { ResearchView } from './modules/research/ResearchView';
 
 const AppContent = () => {
   const [activeModule, setActiveModule] = useState('dashboard');
@@ -46,6 +47,8 @@ const AppContent = () => {
         return <AlertsView />;
       case 'timeline':
         return <TimelineView />;
+      case 'research':
+        return <ResearchView />;
       default:
         return <DashboardView />;
     }
