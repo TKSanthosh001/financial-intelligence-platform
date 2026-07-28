@@ -46,13 +46,23 @@ export const MarketProvider = ({ children }) => {
         api.market.getStatus(),
         api.news.getLatest(),
         api.analysis.getEngineStatus(),
-        api.portfolio.get(),
-        api.watchlists.get(),
+        api.portfolio.get().catch(err => {
+          if (err.message.includes('401') || err.message.includes('Unauthorized')) {
+            return { holdings: [], aiAnalysis: null };
+          }
+          throw err;
+        }),
+        api.watchlists.get().catch(err => {
+          if (err.message.includes('401') || err.message.includes('Unauthorized')) {
+            return [];
+          }
+          throw err;
+        }),
         api.alerts.getRecent(),
         api.fundManager.getMorningReport(),
         api.sectors.getAnalysis(),
         api.globalEvents.getTracker(),
-        api.advisor.ask('Explain today\'s correction').then(() => api.market.getStatus()).then(() => fetchTimelineData()) // fetch timeline helper
+        fetchTimelineData()
       ]);
 
       setMarketStatus(marketRes);
