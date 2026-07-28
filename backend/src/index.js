@@ -10,7 +10,7 @@ const CORS_HEADERS = {
 async function callNvidiaNim(env, prompt, systemMsg = "You are a senior hedge fund advisor.") {
   const apiKey = env.NVIDIA_NIM_API_KEY;
   if (!apiKey) {
-    console.warn("NVIDIA_NIM_API_KEY not configured. Falling back to internal financial model heuristics.");
+    console.warn("NVIDIA_NIM_API_KEY not configured. Falling back to Gemini API.");
     return null;
   }
 
@@ -22,7 +22,7 @@ async function callNvidiaNim(env, prompt, systemMsg = "You are a senior hedge fu
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: "meta/llama3-70b-instruct", // or standard NVIDIA NIM LLM model
+        model: "meta/llama3-70b-instruct",
         messages: [
           { role: "system", content: systemMsg },
           { role: "user", content: prompt }
@@ -38,8 +38,36 @@ async function callNvidiaNim(env, prompt, systemMsg = "You are a senior hedge fu
 
     const data = await response.json();
     return data.choices[0].message.content;
-  } catch (error) {
-    console.error("Failed to query NVIDIA NIM API:", error);
+  } catch (err) {
+    console.error("NVIDIA NIM Error:", err);
+    return null;
+  }
+}
+
+// Helper for Google Gemini API
+async function callGeminiApi(env, prompt, systemMsg = "You are a senior hedge fund advisor.") {
+  const apiKey = env.GEMINI_API_KEY || env.NVIDIA_NIM_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: `${systemMsg}\n\n${prompt}` }]
+          }
+        ]
+      })
+    });
+
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.candidates[0].content.parts[0].text;
+  } catch (e) {
+    console.error("Gemini API call failed:", e);
     return null;
   }
 }
@@ -463,7 +491,10 @@ async function queryAdvisor(env, question) {
   const systemMsg = "You are a top-tier financial advisor and fund manager. Answer the user's question concisely using current macroeconomic metrics (Gold $2415, Crude $82.40, VIX 13.42, Fed pivot expected September, India GDP strong). Format with clear sections.";
   const prompt = `Question: ${question}\nState today: Fear index is low (13.42), Brent Oil is rising ($82.4), Nifty consolidated at 24,235. Give personalized advice.`;
   
-  const aiAnswer = await callNvidiaNim(env, prompt, systemMsg);
+  let aiAnswer = await callNvidiaNim(env, prompt, systemMsg);
+  if (!aiAnswer) {
+    aiAnswer = await callGeminiApi(env, prompt, systemMsg);
+  }
   if (aiAnswer) {
     return aiAnswer;
   }
