@@ -72,6 +72,41 @@ async function callGeminiApi(env, prompt, systemMsg = "You are a senior hedge fu
   }
 }
 
+// Helper for Groq API
+async function callGroqApi(env, prompt, systemMsg = "You are a senior hedge fund advisor.") {
+  const apiKey = env.GROQ_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: "llama-3.1-70b-versatile",
+        messages: [
+          { role: "system", content: systemMsg },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.2,
+        max_tokens: 1024
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Groq API error: ${response.status} ${await response.text()}`);
+    }
+
+    const data = await response.json();
+    return data.choices[0].message.content;
+  } catch (e) {
+    console.error("Groq API call failed:", e);
+    return null;
+  }
+}
+
 // Router entry
 export default {
   // Cron Triggers handler
@@ -491,7 +526,10 @@ async function queryAdvisor(env, question) {
   const systemMsg = "You are a top-tier financial advisor and fund manager. Answer the user's question concisely using current macroeconomic metrics (Gold $2415, Crude $82.40, VIX 13.42, Fed pivot expected September, India GDP strong). Format with clear sections.";
   const prompt = `Question: ${question}\nState today: Fear index is low (13.42), Brent Oil is rising ($82.4), Nifty consolidated at 24,235. Give personalized advice.`;
   
-  let aiAnswer = await callNvidiaNim(env, prompt, systemMsg);
+  let aiAnswer = await callGroqApi(env, prompt, systemMsg);
+  if (!aiAnswer) {
+    aiAnswer = await callNvidiaNim(env, prompt, systemMsg);
+  }
   if (!aiAnswer) {
     aiAnswer = await callGeminiApi(env, prompt, systemMsg);
   }
