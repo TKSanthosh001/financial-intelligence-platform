@@ -58,10 +58,11 @@ export default {
       if (path === '/api/market/status' && method === 'GET') {
         const status = {
           indices: [
-            { id: 'nifty', name: 'Nifty 50', price: '24,235.45', change: '+142.30', pctChange: '+0.59%', trend: 'up', dailyTrend: [24080, 24110, 24150, 24130, 24200, 24235], weeklyTrend: [23800, 23950, 24020, 24100, 24235], monthlyTrend: [23500, 23650, 23900, 24150, 24235], aiSummary: 'Nifty consolidated gains above 24,100 support.' },
-            { id: 'banknifty', name: 'Bank Nifty', price: '51,850.80', change: '+520.40', pctChange: '+1.01%', trend: 'up', dailyTrend: [51300, 51400, 51600, 51550, 51750, 51850], weeklyTrend: [50800, 51100, 51200, 51500, 51850], monthlyTrend: [49800, 50200, 51000, 51400, 51850], aiSummary: 'Outperformed broad market led by private banking.' }
+            { id: 'nifty', name: 'Nifty 50', price: '23,985.35', change: '-10.60', pctChange: '-0.04%', trend: 'down', dailyTrend: [24010, 23990, 24020, 23970, 23985], weeklyTrend: [23800, 23950, 24020, 24100, 23985], monthlyTrend: [23500, 23650, 23900, 24150, 23985], aiSummary: 'Nifty ended flat, down 0.04%, consolidation observed below 24,000 resistance.' },
+            { id: 'sensex', name: 'BSE Sensex', price: '76,765.92', change: '-69.86', pctChange: '-0.09%', trend: 'down', dailyTrend: [76900, 76800, 76720, 76765], weeklyTrend: [76200, 76600, 76900, 77100, 76765], monthlyTrend: [75400, 76100, 76700, 77300, 76765], aiSummary: 'Sensex slid marginally by 0.09% as investors exercised caution ahead of upcoming central bank decisions.' },
+            { id: 'banknifty', name: 'Bank Nifty', price: '56,755.60', change: '-331.40', pctChange: '-0.58%', trend: 'down', dailyTrend: [57100, 56900, 56800, 56755], weeklyTrend: [56200, 56500, 56800, 57100, 56755], monthlyTrend: [55400, 55900, 56400, 56900, 56755], aiSummary: 'Outperformed by broad market but dragged down late session by private banking profit booking.' }
           ],
-          fearGreed: { value: 64, status: 'Greed', prevValue: 58, prevStatus: 'Greed', monthlyValue: 48, monthlyStatus: 'Neutral', aiSummary: 'Fear & Greed index is turning increasingly optimistic.' }
+          fearGreed: { value: 64, status: 'Greed', prevValue: 58, prevStatus: 'Greed', monthlyValue: 48, monthlyStatus: 'Neutral', aiSummary: 'Fear & Greed index rose to 64, indicating market participants are turning increasingly optimistic.' }
         };
         return jsonResponse(status);
       }
@@ -69,7 +70,7 @@ export default {
       // 2. News Feed
       if (path === '/api/news' && method === 'GET') {
         return jsonResponse([
-          { id: 1, title: 'Crude Oil Surges 2.3% as Middle East Tensions ESCALATE; Supply Lines Threat Looming', source: 'Financial Express', time: '2 hours ago', type: 'Geopolitical', summary: 'Brent crude prices surged past $82 per barrel as tensions in West Asia escalated.', aiAnalysis: { whatHappened: 'Brent crude rose to $82.40/bbl.', whyItMatters: 'Higher crude oil prices increase import bills for energy-dependent nations like India.', sectorsAffected: [{ name: 'Aviation', impact: 'negative', reason: 'Fuel represents 35-40% of operations costs.' }], shortTermImpact: 'Slightly negative sentiment; currency risk.', longTermImpact: 'Sticky inflation if sustained.', confidenceScore: 92 } }
+          { id: 1, title: 'RBI Proposes Securitisation Rules Amendment: ₹1 Crore Minimum Investment in Demat Form Required', source: 'Economic Times', time: '30 mins ago', type: 'RBI / Regulatory', summary: 'The Reserve Bank of India has proposed draft amendments to securitisation transaction rules, prescribing a ₹1 crore minimum investment limit.', aiAnalysis: { whatHappened: 'RBI proposed draft securitisation rules requiring demat-only issuance.', whyItMatters: 'Forces transaction transparency and mitigates retail speculation risks.', sectorsAffected: [{ name: 'Banking', impact: 'positive', reason: 'Better risk containment and structured asset books.' }], shortTermImpact: 'Neutral to slightly positive.', longTermImpact: 'Clean, transparent asset backing systems.', confidenceScore: 94 } }
         ]);
       }
 
@@ -79,12 +80,12 @@ export default {
         return jsonResponse({
           date: todayStr,
           title: 'AI Good Morning Report',
-          marketSummary: 'Global cues are highly mixed this morning. US indices closed soft yesterday due to hardware tech profit booking, but the bond yields eased to 4.18%, signaling an impending rate cut cycle. Asian markets are opening flat.',
+          marketSummary: 'Global cues are highly mixed this morning. US indices closed soft yesterday due to hardware tech profit booking, but the bond yields eased, signaling an impending rate cut cycle.',
           importantEvents: [{ event: 'US Core PCE Inflation data due tomorrow.', impact: 'High' }],
           portfolioImpact: 'Your portfolio is well-positioned for today. The IT rebound will provide strength, offsetting any volatility in Reliance.',
           todayRisks: 'Rising crude oil prices may trigger intraday profit booking in auto and aviation sectors.',
           todayOpportunities: 'It is a good day to slowly accumulate defensive FMCG giants or Index ETFs during dips.',
-          thingsToWatch: ['USDINR trajectory near 83.75', 'FII net flows in first 2 hours']
+          thingsToWatch: ['USDINR trajectory near 95.75', 'FII net flows in first 2 hours']
         });
       }
 

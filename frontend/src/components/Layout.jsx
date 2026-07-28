@@ -135,18 +135,73 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
-      {/* Top Header */}
-      <AppBar 
-        position="fixed" 
-        sx={{ 
-          width: { md: `calc(100% - ${drawerWidth}px)` }, 
-          ml: { md: `${drawerWidth}px` }, 
-          bgcolor: '#111524', 
-          borderBottom: '1px solid #2a2e39', 
-          boxShadow: 'none' 
+    <Box sx={{ display: 'flex', bgcolor: 'background.default', minHeight: '100vh' }}>
+
+      {/* ========== SIDEBAR ========== */}
+      <Box
+        component="nav"
+        sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
+        aria-label="navigation"
+      >
+        {/* Mobile — slide-over drawer */}
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{ keepMounted: true }}
+          sx={{
+            display: { xs: 'block', md: 'none' },
+            '& .MuiDrawer-paper': {
+              width: drawerWidth,
+              boxSizing: 'border-box',
+              bgcolor: '#0d1117',
+              borderRight: '1px solid #2a2e39',
+            },
+          }}
+        >
+          {drawerContent}
+        </Drawer>
+        {/* Desktop — permanent fixed sidebar */}
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            '& .MuiDrawer-paper': {
+              width: drawerWidth,
+              boxSizing: 'border-box',
+              bgcolor: '#0d1117',
+              borderRight: '1px solid #2a2e39',
+              overflowX: 'hidden',
+            },
+          }}
+          open
+        >
+          {drawerContent}
+        </Drawer>
+      </Box>
+
+      {/* ========== RIGHT COLUMN: AppBar + Content ========== */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          flexGrow: 1,
+          width: { xs: '100%', md: `calc(100% - ${drawerWidth}px)` },
+          minHeight: '100vh',
         }}
       >
+        {/* Top AppBar — scoped only to the content column */}
+        <AppBar
+          position="fixed"
+          sx={{
+            width: { xs: '100%', md: `calc(100% - ${drawerWidth}px)` },
+            ml: { xs: 0, md: `${drawerWidth}px` },
+            bgcolor: '#111524',
+            borderBottom: '1px solid #2a2e39',
+            boxShadow: 'none',
+            zIndex: (theme) => theme.zIndex.appBar,
+          }}
+        >
         <Toolbar sx={{ justifyContent: 'space-between', minHeight: 64 }}>
           {/* Hamburger Menu Toggle (Mobile Only) */}
           <IconButton
@@ -222,52 +277,37 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
         </Toolbar>
       </AppBar>
 
-      {/* Navigation Drawers: Temporary for Mobile, Permanent for Desktop */}
-      <Box component="nav" sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}>
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{ keepMounted: true }}
+
+
+
+        {/* Main scrollable content — sits below the fixed AppBar */}
+        <Box
+          component="main"
           sx={{
-            display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, bgcolor: '#111524', borderRight: '1px solid #2a2e39' },
+            flexGrow: 1,
+            px: { xs: 2, md: 3 },
+            pb: 4,
+            pt: 2,
+            /* Offset below the fixed AppBar (toolbar height = 64px) */
+            mt: '64px',
+            overflowX: 'hidden',
+            boxSizing: 'border-box',
+            minHeight: 'calc(100vh - 64px)',
           }}
         >
-          {drawerContent}
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', md: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, bgcolor: '#111524', borderRight: '1px solid #2a2e39' },
-          }}
-          open
-        >
-          {drawerContent}
-        </Drawer>
+          {children}
+        </Box>
       </Box>
 
-      {/* Main Content Area */}
-      <Box 
-        component="main" 
-        sx={{ 
-          flexGrow: 1, 
-          p: { xs: 2, md: 3 }, 
-          width: { xs: '100%', md: `calc(100% - ${drawerWidth}px)` }, 
-          minHeight: '100vh', 
-          pt: 11,
-          overflowX: 'hidden' 
-        }}
-      >
-        {children}
-      </Box>
-
-      {/* CSS Injection for custom spin animation */}
+      {/* Global CSS for spin animation */}
       <style>{`
         @keyframes spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </Box>

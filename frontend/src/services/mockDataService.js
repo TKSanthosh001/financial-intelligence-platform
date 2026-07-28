@@ -201,17 +201,17 @@ export const mockAlerts = [
 ];
 
 export const mockFundManagerReport = {
-  date: 'July 28, 2026',
+  date: 'July 29, 2026',
   title: 'AI Good Morning Report',
-  marketSummary: 'Global cues are highly mixed this morning. US indices closed soft yesterday due to hardware tech profit booking, but the bond yields eased to 4.18%, signaling an impending rate cut cycle. Asian markets are opening flat. Nifty is expected to open slightly in the green (+30 points) tracking gift Nifty cues.',
+  marketSummary: 'Indian markets closed flat-to-negative on July 28. Nifty 50 ended at 23,985 (-0.04%), Sensex at 76,765 (-0.09%), and Bank Nifty underperformed at 56,755 (-0.58%). Global cues are mixed — US bond yields eased to 4.18%, supporting equity risk premiums globally. Gift Nifty is suggesting a flat open near 23,990. Watch for any geopolitical developments in West Asia overnight.',
   importantEvents: [
-    { event: 'US Core PCE Inflation data due tomorrow (critical for Fed rate decisions).', impact: 'High' },
-    { event: 'Middle East geopolitical tensions escalating; Crude oil trades elevated at $82.40.', impact: 'Medium' }
+    { event: 'US Core PCE Inflation data due tonight (critical for Fed rate decisions).', impact: 'High' },
+    { event: 'RBI Securitisation rule amendments proposed — Positive for banking credit quality.', impact: 'Medium' }
   ],
-  portfolioImpact: 'Your portfolio is well-positioned for today. The IT rebound (Infosys) will provide strength, offsetting any volatility in Reliance. Keep an eye on Tata Steel, as weak Chinese metal output numbers could pressure prices today.',
-  todayRisks: 'Rising crude oil prices may trigger intraday profit booking in auto and aviation sectors. Avoid adding new leverage positions in mid-caps today.',
-  todayOpportunities: 'It is a good day to slowly accumulate defensive FMCG giants (e.g., ITC) or Index ETFs during dips, as volatility might provide better entry pricing.',
-  thingsToWatch: ['USDINR trajectory near 83.75', 'FII net flows in the first 2 hours of trade']
+  portfolioImpact: 'Your portfolio is cautiously positioned. Infosys (INFY) at ₹1,512 provides strength from IT recovery. Watch Tata Steel closely — global steel demand data from China will be crucial. HDFC Bank is consolidating near ₹1,610 support.',
+  todayRisks: 'Flat Bank Nifty could weigh on your HDFCBANK position. Avoid adding fresh leverage on mid-caps today as broad market consolidation continues below 24,000.',
+  todayOpportunities: 'IT sector remains a safe accumulation zone. Defensive plays like ITC or Pharma index ETFs are attractive on any dip below key supports.',
+  thingsToWatch: ['USDINR trajectory near 95.75 — RBI intervention watch', 'FII net flows in first 2 hours of trade', 'Nifty 24,000 as key resistance — break above opens path to 24,200']
 };
 
 export const mockAdvisorResponses = [
@@ -233,15 +233,15 @@ export const mockMarketTimeline = [
   {
     period: 'Today',
     events: [
-      { time: '03:30 PM', title: 'Nifty closes at 24,235.45 (+0.59%)', desc: 'Heavy buying in private banking heavyweights (HDFC Bank, ICICI Bank) lifted the index in the last hour.' },
-      { time: '11:00 AM', title: 'Brent Crude spikes above $82.40', desc: 'Geopolitical threats trigger worries over ocean shipping freight rates.' }
+      { time: '03:30 PM', title: 'Nifty closes at 23,985.35 (-0.04%)', desc: 'Markets ended flat to marginally lower. Selling pressure in Bank Nifty (-0.58%) and broad market caution capped gains. Nifty held above 23,950 support.' },
+      { time: '11:00 AM', title: 'RBI proposes Securitisation Rules — ₹1 Crore minimum', desc: 'RBI draft amendment mandates demat-only securitisation and high entry thresholds. Banking sector responded positively to the transparency move.' }
     ]
   },
   {
     period: 'Yesterday',
     events: [
-      { time: '05:30 PM', title: 'FIIs sell net ₹3,400 Crore, DIIs buy ₹2,900 Crore', desc: 'DIIs absorption prevents Nifty from sliding below its 20-DMA support.' },
-      { time: '02:00 PM', title: 'RBI Repo Rate announcement', desc: 'Repo rate kept at 6.5%, reinforcing monetary discipline.' }
+      { time: '05:30 PM', title: 'FIIs net buy ₹1,420 Cr; DIIs add ₹2,150 Cr', desc: 'Domestic institutions continue strong support. FII flows turned positive for the session, preventing any sharp index correction.' },
+      { time: '02:00 PM', title: 'Tata Communications × TTBS announce AI Platform Stack', desc: 'Strategic partnership for unified SMB AI cloud services drives Telecom and IT infrastructure sentiment higher.' }
     ]
   },
   {
