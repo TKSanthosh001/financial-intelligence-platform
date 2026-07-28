@@ -1,0 +1,16 @@
+name = "financial-intelligence-backend"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+# NVIDIA NIM API key will be bound here or pulled from secrets
+# NVIDIA_NIM_API_KEY = "..."
+
+[[d1_databases]]
+binding = "DB"
+database_name = "financial-platform-db"
+database_id = "cf-d1-db-uuid-placeholder"
+
+# Cron trigger for running the AI morning report every day at 6:00 AM
+[triggers]
+crons = ["0 6 * * *"]
