@@ -8,8 +8,8 @@ import Layout from './components/Layout';
 // Module View Imports
 import DashboardView from './modules/dashboard/DashboardView';
 import NewsView from './modules/news/NewsView';
-import PortfolioView from './modules/portfolio/PortfolioView';
-import WatchlistView from './modules/watchlist/WatchlistView';
+import { PortfolioView } from './modules/portfolio/PortfolioView';
+import { WatchlistView } from './modules/watchlist/WatchlistView';
 import AdvisorView from './modules/advisor/AdvisorView';
 import SectorsView from './modules/sectors/SectorsView';
 import GlobalEventsView from './modules/global/GlobalEventsView';

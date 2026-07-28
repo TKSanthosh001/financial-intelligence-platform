@@ -11,6 +11,23 @@ html, body, #root {
   overflow-x: hidden;
 }
 
+/* Mobile-app look and feel settings */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+input, textarea, [role="textbox"], .selectable {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
 /* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
