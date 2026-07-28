@@ -107,7 +107,14 @@ export default {
       // 6. Chronological Timeline
       if (path === '/api/timeline' && method === 'GET') {
         return jsonResponse([
-          { period: 'Today', events: [{ time: '03:30 PM', title: 'Nifty closes at 24,235.45 (+0.59%)', desc: 'Heavy buying in private banking heavyweights (HDFC Bank, ICICI Bank) lifted the index in the last hour.' }, { time: '11:00 AM', title: 'Brent Crude spikes above $82.40', desc: 'Geopolitical threats trigger worries over ocean shipping freight rates.' }] }
+          { period: 'Today', events: [
+            { time: '03:30 PM', title: 'Nifty closes at 23,985.35 (-0.04%)', desc: 'Markets ended flat-to-lower. Selling in Bank Nifty (-0.58%) capped gains. Nifty held above 23,950 support zone.' },
+            { time: '11:00 AM', title: 'RBI proposes Securitisation Rules — ₹1 Crore min investment', desc: 'Draft amendments to securitisation transaction rules published. Banking sector reacted positively.' }
+          ]},
+          { period: 'Yesterday', events: [
+            { time: '05:30 PM', title: 'FIIs net buy ₹1,420 Cr; DIIs add ₹2,150 Cr', desc: 'Domestic institutions supported markets. FII flows turned positive preventing sharp correction.' },
+            { time: '02:00 PM', title: 'Tata Comm × TTBS announce unified AI Platform Stack', desc: 'Strategic partnership for SMB cloud AI services drives Telecom and IT higher.' }
+          ]}
         ]);
       }
 
@@ -163,11 +170,81 @@ export default {
         return jsonResponse({ success: true, message: 'Push signal broadcast completed' });
       }
 
+      // 10. AI Analysis Engine Status (PUBLIC - no auth needed)
+      if (path === '/api/analysis/engine' && method === 'GET') {
+        return jsonResponse({
+          marketMood: 'Neutral to Bullish',
+          moodValue: 65,
+          probability: '72%',
+          reasoning: 'Domestic liquidity remains strong with consistent DII support. US Fed pivot expectations act as a tailwind. However high valuations in mid/small-caps and crude oil volatility are keeping bulls in check.',
+          keyRisks: [
+            { title: 'Crude Spike', desc: 'Brent above $85/bbl on Strait of Hormuz concerns.' },
+            { title: 'FII Outflows', desc: 'FIIs rotating to cheaper markets like China.' }
+          ],
+          keyOpportunities: [
+            { title: 'Rate Cut Plays', desc: 'Accumulate interest-rate sensitive sectors before official cuts.' },
+            { title: 'IT Rebound', desc: 'IT services showing earnings beats and positive guidance.' }
+          ]
+        });
+      }
+
+      // 11. Recent Alerts (PUBLIC - no auth needed)
+      if (path === '/api/alerts' && method === 'GET') {
+        return jsonResponse([
+          { id: 1, time: '09:30 AM Today', symbol: 'INFY', title: 'Infosys jumps 4.5% at market open', type: 'Earnings Spike', explanation: 'Triggered by Q1 earnings beat and upward revision of constant-currency guidance to 3-4%.' },
+          { id: 2, time: '10:15 AM Today', symbol: 'FII_ACTIVITY', title: 'FII net buy ₹1,420 Crore recorded', type: 'FII/DII Action', explanation: 'FIIs turned net buyers today. DII support remains strong at ₹2,150 Crore. Positive for market stability.' }
+        ]);
+      }
+
+      // 12. Watchlist (PUBLIC with guest data - no auth needed)
+      if (path === '/api/watchlist' && method === 'GET') {
+        return jsonResponse([
+          {
+            name: 'Tech & High Growth',
+            items: [
+              { symbol: 'TCS',        price: '4,150.20', change: '+52.40',  pctChange: '+1.28%', aiSummary: 'Consolidating gains. Strong pipeline wins detected. Sector view: Bullish.' },
+              { symbol: 'INFY',       price: '1,512.60', change: '+50.30',  pctChange: '+3.45%', aiSummary: 'Q1 earnings beat. Upward guidance revision driving momentum.' },
+              { symbol: 'MUTHOOTFIN', price: '1,720.00', change: '+25.60',  pctChange: '+1.51%', aiSummary: 'Benefiting from Gold price surge. Collateral values rising.' }
+            ]
+          },
+          {
+            name: 'Macro / Commodities',
+            items: [
+              { symbol: 'US10Y', price: '4.18%', change: '-0.04', pctChange: '-0.95%', aiSummary: 'US 10-Year yield slipped on Fed rate cut optimism.' },
+              { symbol: 'DXY',   price: '104.12', change: '-0.30', pctChange: '-0.29%', aiSummary: 'Dollar Index easing below 104.5. Positive for emerging markets.' }
+            ]
+          }
+        ]);
+      }
+
+      // 13. Portfolio (PUBLIC guest fallback - no 401)
+      if (path === '/api/portfolio' && method === 'GET') {
+        if (!request.userId) {
+          // Return guest demo portfolio instead of 401
+          return jsonResponse({
+            holdings: [
+              { symbol: 'RELIANCE', name: 'Reliance Industries Ltd.', type: 'Stock', category: 'Energy/Conglomerate', avgPrice: 2450.00, currentPrice: 2580.40, qty: 50 },
+              { symbol: 'HDFCBANK', name: 'HDFC Bank Ltd.', type: 'Stock', category: 'Private Banking', avgPrice: 1550.00, currentPrice: 1610.20, qty: 80 },
+              { symbol: 'INFY',     name: 'Infosys Ltd.', type: 'Stock', category: 'IT Services', avgPrice: 1420.00, currentPrice: 1512.60, qty: 60 }
+            ],
+            aiAnalysis: {
+              sectorAllocation: [{ name: 'Energy', value: 35 }, { name: 'Banking', value: 35 }, { name: 'IT Services', value: 30 }],
+              riskScore: 'Moderate (5.5/10)',
+              diversificationStatus: 'Moderate',
+              warnings: [{ type: 'Guest Mode', message: 'Sign in to track your real portfolio.' }],
+              duplicateHoldings: 'Sign in to get full duplicate analysis.',
+              suggestions: [{ action: 'Buy', symbol: 'Index ETFs', reason: 'Add Nifty 50 ETF for passive diversification.' }]
+            }
+          });
+        }
+        return await handleGetPortfolio(request, env);
+      }
+
       // ==========================================
       // PRIVATE ENDPOINTS (Requires Authorization)
       // ==========================================
       if (!request.userId) {
-        return jsonResponse({ error: 'Unauthorized: Auth token required' }, 401);
+        return jsonResponse({ error: 'Unauthorized: Auth token required for this endpoint' }, 401);
       }
 
       if (path === '/api/preferences' && method === 'GET') {

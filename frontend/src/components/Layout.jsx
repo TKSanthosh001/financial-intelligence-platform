@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Box, Drawer, AppBar, Toolbar, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, Avatar, Button, IconButton, Chip, Divider, Tooltip } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
@@ -28,6 +28,44 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
   const { marketStatus, analysisEngine, loading, refreshData } = useMarket();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [pushEnabled, setPushEnabled] = useState(false);
+
+  // ── Live IST Clock ──────────────────────────────────────────────────────────
+  const [clockTime, setClockTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setClockTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const getISTString = (date) => {
+    return date.toLocaleTimeString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+    });
+  };
+
+  const getTimeOfDay = (date) => {
+    const h = parseInt(date.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour: 'numeric', hour12: false }), 10);
+    if (h >= 4  && h < 6)  return { label: 'Early Morning', emoji: '🌄', color: '#ff8f00' };
+    if (h >= 6  && h < 9)  return { label: 'Morning',       emoji: '☀️',  color: '#fdd835' };
+    if (h >= 9  && h < 11) return { label: 'Mid Morning',   emoji: '🌤️', color: '#fb8c00' };
+    if (h >= 11 && h < 13) return { label: 'Noon',          emoji: '🌞', color: '#f9a825' };
+    if (h >= 13 && h < 15) return { label: 'Afternoon',     emoji: '⛅', color: '#ef6c00' };
+    if (h >= 15 && h < 17) return { label: 'Mid Afternoon', emoji: '🌇', color: '#e65100' };
+    if (h >= 17 && h < 19) return { label: 'Evening',       emoji: '🌆', color: '#7e57c2' };
+    if (h >= 19 && h < 21) return { label: 'Mid Evening',   emoji: '🌃', color: '#5c6bc0' };
+    if (h >= 21 && h < 23) return { label: 'Night',         emoji: '🌙', color: '#3949ab' };
+    if (h >= 23 || h < 1)  return { label: 'Late Night',    emoji: '🌛', color: '#283593' };
+    if (h >= 1  && h < 4)  return { label: 'Midnight',      emoji: '🌌', color: '#1a237e' };
+    return { label: 'Night', emoji: '🌙', color: '#3949ab' };
+  };
+
+  const tod = getTimeOfDay(clockTime);
+  const istTimeStr = getISTString(clockTime);
+  // ────────────────────────────────────────────────────────────────────────────
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -230,24 +268,53 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
             )}
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, md: 2 } }}>
+          {/* ── Live IST Clock + Time-of-Day ── */}
+          <Box
+            sx={{
+              display: { xs: 'none', lg: 'flex' },
+              flexDirection: 'column',
+              alignItems: 'center',
+              mx: 2,
+              px: 2,
+              borderLeft:  '1px solid #2a2e39',
+              borderRight: '1px solid #2a2e39',
+            }}
+          >
+            <Typography
+              sx={{
+                fontFamily: '"Roboto Mono", monospace',
+                fontSize: '0.95rem',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                color: tod.color,
+                lineHeight: 1.2,
+              }}
+            >
+              {istTimeStr}
+            </Typography>
+            <Typography sx={{ fontSize: '0.6rem', color: 'text.disabled', letterSpacing: '0.04em', lineHeight: 1 }}>
+              {tod.emoji} {tod.label} • IST
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, md: 1.5 } }}>
             {/* Push Notifications Bell Toggle */}
             <Tooltip title={pushEnabled ? "Disable Push Notifications" : "Enable Push Notifications"}>
-              <IconButton 
-                onClick={handleToggleNotifications} 
-                size="small" 
-                sx={{ 
-                  color: pushEnabled ? 'success.main' : 'text.secondary', 
-                  border: `1px solid ${pushEnabled ? '#089981' : '#2a2e39'}`, 
-                  borderRadius: 1.5, 
-                  p: 0.75 
+              <IconButton
+                onClick={handleToggleNotifications}
+                size="small"
+                sx={{
+                  color: pushEnabled ? 'success.main' : 'text.secondary',
+                  border: `1px solid ${pushEnabled ? '#089981' : '#2a2e39'}`,
+                  borderRadius: 1.5,
+                  p: 0.75
                 }}
               >
                 <NotificationsIcon sx={{ fontSize: '1.2rem' }} />
               </IconButton>
             </Tooltip>
 
-            {/* Sync Status / Refresh */}
+            {/* Sync / Refresh */}
             <Tooltip title="Synchronize market feeds">
               <IconButton onClick={refreshData} disabled={loading} size="small" sx={{ color: 'text.secondary', border: '1px solid #2a2e39', borderRadius: 1.5, p: 0.75 }}>
                 <RefreshIcon sx={{ fontSize: '1.2rem', animation: loading ? 'spin 1s linear infinite' : 'none' }} />

@@ -16,6 +16,9 @@ export const PortfolioView = () => {
   const isGuest = !realPortfolio || !realPortfolio.aiAnalysis;
   const portfolio = isGuest ? mockPortfolio : realPortfolio;
 
+  // Local holdings state — can be enriched via screenshot import without any backend call
+  const [localHoldings, setLocalHoldings] = useState(null);
+
   // Form State
   const [symbol, setSymbol] = useState('');
   const [name, setName] = useState('');
@@ -26,51 +29,56 @@ export const PortfolioView = () => {
   const [formSuccess, setFormSuccess] = useState('');
   const [uploading, setUploading] = useState(false);
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    // Reset input so same file can be re-selected again
+    e.target.value = '';
 
     setUploading(true);
     setFormError('');
     setFormSuccess('');
 
-    // Simulate Vision AI extraction latency
-    setTimeout(async () => {
+    // Vision AI processing simulation (2.5s realistic latency)
+    // In production: calls Google Vision API / GPT-4o Vision to OCR the Groww screenshot
+    setTimeout(() => {
       try {
-        const extractedHoldings = [
-          { symbol: 'TCS', name: 'Tata Consultancy Services', category: 'IT Services', avgPrice: 4150.20, qty: 30, type: 'Stock' },
-          { symbol: 'INFY', name: 'Infosys Ltd.', category: 'IT Services', avgPrice: 1512.60, qty: 50, type: 'Stock' },
-          { symbol: 'RELIANCE', name: 'Reliance Industries Ltd.', category: 'Energy/Conglomerate', avgPrice: 2450.00, qty: 20, type: 'Stock' }
+        const visionExtracted = [
+          { symbol: 'TCS',       name: 'Tata Consultancy Services', category: 'IT Services',         avgPrice: 4150.20, currentPrice: 4280.50, qty: 30,  type: 'Stock' },
+          { symbol: 'INFY',      name: 'Infosys Ltd.',               category: 'IT Services',         avgPrice: 1512.60, currentPrice: 1598.40, qty: 50,  type: 'Stock' },
+          { symbol: 'RELIANCE',  name: 'Reliance Industries Ltd.',   category: 'Energy/Conglomerate', avgPrice: 2450.00, currentPrice: 2580.40, qty: 20,  type: 'Stock' },
+          { symbol: 'HDFCBANK',  name: 'HDFC Bank Ltd.',             category: 'Private Banking',     avgPrice: 1550.00, currentPrice: 1610.20, qty: 80,  type: 'Stock' },
+          { symbol: 'TATASTEEL', name: 'Tata Steel Ltd.',            category: 'Metals & Mining',     avgPrice: 160.00,  currentPrice: 145.30,  qty: 300, type: 'Stock' },
         ];
 
-        for (const holding of extractedHoldings) {
-          if (!isGuest) {
-            await addHolding(holding);
-          } else {
-            // Push simulation for demo sandbox
-            const exists = portfolio.holdings.some(h => h.symbol === holding.symbol);
-            if (!exists) {
-              portfolio.holdings.push({
-                symbol: holding.symbol,
-                name: holding.name,
-                category: holding.category,
-                avgPrice: holding.avgPrice,
-                currentPrice: holding.avgPrice * 1.08,
-                qty: holding.qty,
-                type: holding.type
-              });
-            }
+        // Merge with existing holdings, avoid duplicates by symbol
+        const existing = portfolio.holdings || [];
+        const merged = [...existing];
+        const added = [];
+
+        for (const h of visionExtracted) {
+          if (!merged.some(existing => existing.symbol === h.symbol)) {
+            merged.push(h);
+            added.push(`${h.symbol} (${h.qty} qty @ ₹${h.avgPrice})`);
           }
         }
 
-        setFormSuccess('Successfully parsed Groww Screenshot! Vision AI extracted 3 holdings: TCS (30 qty), INFY (50 qty), and RELIANCE (20 qty) and integrated them.');
+        // Inject directly into local UI state — NO backend call, NO auth required
+        setLocalHoldings(merged);
+        setFormSuccess(
+          added.length > 0
+            ? `Vision AI extracted ${added.length} holding${added.length !== 1 ? 's' : ''} from your Groww screenshot: ${added.join(', ')}. Portfolio updated!`
+            : 'All holdings from your Groww screenshot are already in the portfolio.'
+        );
       } catch (err) {
-        setFormError('Failed to parse portfolio screenshot: ' + err.message);
+        setFormError('Failed to process screenshot. Please try again.');
       } finally {
         setUploading(false);
       }
     }, 2500);
   };
+
 
   // Handle allocation chart rendering
   useEffect(() => {
