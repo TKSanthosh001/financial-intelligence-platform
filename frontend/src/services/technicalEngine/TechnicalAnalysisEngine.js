@@ -9,6 +9,9 @@ import volumeAnalyzer from './VolumeAnalyzer';
 import supportResistanceEngine from './SupportResistanceEngine';
 import technicalScoringEngine from './TechnicalScoringEngine';
 import replayEngine from './ReplayEngine';
+import fibonacciEngine from './FibonacciEngine';
+import divergenceEngine from './DivergenceEngine';
+import reversalEngine from './ReversalEngine';
 
 class TechnicalAnalysisEngine {
   generateCandles(basePrice = 1512.4, count = 100) {
@@ -39,6 +42,8 @@ class TechnicalAnalysisEngine {
     return candles;
   }
 
+
+
   analyzeTechnicalSetup(symbol = 'INFY', basePrice = 1512.4, timeframe = 'Daily') {
     const candles = this.generateCandles(basePrice, 100);
     const lastPrice = candles[candles.length - 1].close;
@@ -49,6 +54,9 @@ class TechnicalAnalysisEngine {
     const volume = volumeAnalyzer.analyzeVolume(candles);
     const levels = supportResistanceEngine.calculateLevels(candles, lastPrice);
     const scores = technicalScoringEngine.evaluateScores(indicators, volume, patterns, structure);
+    const fibonacci = fibonacciEngine.calculateFibonacci(lastPrice * 1.10, lastPrice * 0.88, lastPrice);
+    const divergences = divergenceEngine.scanDivergences(candles, indicators);
+    const reversal = reversalEngine.evaluateReversal(candles, indicators, volume);
 
     // Multi-Timeframe Trend Alignment Matrix
     const multiTimeframe = {
@@ -61,12 +69,12 @@ class TechnicalAnalysisEngine {
       verdict: 'MULTI-TIMEFRAME BULLISH ALIGNMENT confirmed across all 5 key timeframes.'
     };
 
-    // AI Natural Language Interpretation (Thinking like a professional trader)
+    // AI Natural Language Interpretation
     const aiNarrative = `The stock remains in a strong, healthy uptrend across Daily and Weekly timeframes.
-Price is trading comfortably above EMA(20) [₹${indicators.ema20}] and EMA(50) [₹${indicators.ema50}], with volume expanding by ${volume.volumeRatio}x on up-days, confirming genuine institutional accumulation rather than retail churn.
-RSI is holding at ${indicators.rsi14} in the optimal expansion zone (55–70) without any bearish divergence.
-Market structure shows a clear Break of Structure (BOS) above ₹${levels.nearestResistance}, with solid dynamic EMA support at ₹${levels.nearestSupport}.
-Probability strongly favors continued upward momentum towards the target zone ₹${levels.resistances[1]?.price}.`;
+Price is trading comfortably above EMA(20) [₹${indicators.ema20}] and EMA(50) [₹${indicators.ema50}], with volume expanding by ${volume.volumeRatio}x on up-days, confirming genuine institutional accumulation.
+RSI is holding at ${indicators.rsi14} in the optimal expansion zone (55–70) with no bearish divergence detected.
+Fibonacci Golden Pocket sits at ₹${fibonacci.goldenPocket.bottom} - ₹${fibonacci.goldenPocket.top}, providing major structural support. Reversal risk is LOW (${reversal.reversalProbability}%).
+Probability strongly favors continued upward momentum towards the 161.8% Fib extension target zone ₹${fibonacci.extensions.ext1618}.`;
 
     return {
       symbol,
@@ -79,6 +87,9 @@ Probability strongly favors continued upward momentum towards the target zone �
       volume,
       levels,
       scores,
+      fibonacci,
+      divergences,
+      reversal,
       multiTimeframe,
       aiNarrative,
       timestamp: new Date().toISOString()

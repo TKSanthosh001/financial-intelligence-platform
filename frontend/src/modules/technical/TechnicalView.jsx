@@ -237,6 +237,9 @@ export const TechnicalView = () => {
       <Tabs value={activeTab} onChange={(_, v) => setActiveTab(v)} sx={{ mb: 3, borderBottom: '1px solid #2a2e39', '& .MuiTab-root': { fontSize: '0.8rem', fontWeight: 700 }, '& .MuiTabs-indicator': { bgcolor: '#089981' } }}>
         <Tab label="🧠 AI Chart Narrative" />
         <Tab label="📈 Indicators & Pivots" />
+        <Tab label="🌀 Fibonacci & Golden Pocket" />
+        <Tab label="⚡ Divergence Scanner" />
+        <Tab label="🔄 Reversal & Climax Risk" />
         <Tab label="🕯️ Patterns & Formations" />
         <Tab label="🏛️ Smart Money (SMC / BOS)" />
         <Tab label="🎯 Swing Setup & Levels" />
@@ -259,7 +262,104 @@ export const TechnicalView = () => {
         </Card>
       )}
 
-      {/* ── TAB 1: Indicators & Pivots ── */}
+      {/* ── TAB 2: Fibonacci & Golden Pocket ── */}
+      {activeTab === 2 && (
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6}>
+            <Card sx={{ border: '1px solid #2a2e39' }}>
+              <CardContent sx={{ p: 2.5 }}>
+                <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>Fibonacci Retracement Levels</Typography>
+                {[
+                  { level: '23.6%', price: `₹${analysis.fibonacci?.retracements.fib236}` },
+                  { level: '38.2%', price: `₹${analysis.fibonacci?.retracements.fib382}` },
+                  { level: '50.0% (Halfway)', price: `₹${analysis.fibonacci?.retracements.fib500}` },
+                  { level: '61.8% (Golden Ratio)', price: `₹${analysis.fibonacci?.retracements.fib618}`, highlight: true },
+                  { level: '78.6%', price: `₹${analysis.fibonacci?.retracements.fib786}` },
+                ].map((f, i) => (
+                  <Box key={i} sx={{ display: 'flex', justifyContent: 'space-between', py: 1, borderBottom: '1px solid #2a2e39', bgcolor: f.highlight ? 'rgba(249,168,37,0.08)' : 'transparent' }}>
+                    <Typography variant="body2" sx={{ fontWeight: 700, color: f.highlight ? '#f9a825' : 'text.primary' }}>{f.level}</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 800 }}>{f.price}</Typography>
+                  </Box>
+                ))}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Card sx={{ border: '1px solid #2a2e39' }}>
+              <CardContent sx={{ p: 2.5 }}>
+                <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>Fibonacci Extensions & Golden Pocket</Typography>
+                <Paper sx={{ p: 2, bgcolor: 'rgba(249,168,37,0.06)', borderLeft: '3px solid #f9a825', mb: 2 }}>
+                  <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
+                    {analysis.fibonacci?.aiFibCommentary}
+                  </Typography>
+                </Paper>
+                <Typography variant="caption" sx={{ color: 'text.disabled', fontWeight: 800, display: 'block', mb: 1 }}>
+                  PROJECTION TARGETS
+                </Typography>
+                <Box sx={{ p: 1.5, bgcolor: '#0d1117', borderRadius: 1, border: '1px solid #2a2e39' }}>
+                  <Typography variant="caption" sx={{ display: 'block', color: 'success.main', fontWeight: 700 }}>• 127.2% Ext: ₹{analysis.fibonacci?.extensions.ext1272}</Typography>
+                  <Typography variant="caption" sx={{ display: 'block', color: 'success.main', fontWeight: 800 }}>• 161.8% Ext (Primary Target): ₹{analysis.fibonacci?.extensions.ext1618}</Typography>
+                  <Typography variant="caption" sx={{ display: 'block', color: 'success.main', fontWeight: 700 }}>• 261.8% Ext (Bull Case): ₹{analysis.fibonacci?.extensions.ext2618}</Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      )}
+
+      {/* ── TAB 3: Divergence Scanner ── */}
+      {activeTab === 3 && (
+        <Card sx={{ border: '1px solid #2a2e39' }}>
+          <CardContent sx={{ p: 2.5 }}>
+            <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>Momentum & Volume Divergence Scanner</Typography>
+            {analysis.divergences?.divergences?.map((div, i) => (
+              <Paper key={i} sx={{ p: 2, mb: 1.5, bgcolor: '#0d1117', border: '1px solid #2a2e39' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 800, color: '#089981' }}>{div.type}</Typography>
+                  <Chip label={`${div.confidence}% Confidence`} color="success" size="small" sx={{ fontWeight: 800, fontSize: '0.6rem' }} />
+                </Box>
+                <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>{div.description}</Typography>
+              </Paper>
+            ))}
+            {(!analysis.divergences?.divergences || analysis.divergences.divergences.length === 0) && (
+              <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', py: 2 }}>
+                {analysis.divergences?.summary}
+              </Typography>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ── TAB 4: Reversal & Climax Risk ── */}
+      {activeTab === 4 && (
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6}>
+            <Card sx={{ border: '1px solid #2a2e39', height: '100%' }}>
+              <CardContent sx={{ p: 2.5 }}>
+                <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>Trend Exhaustion & Climax Risk</Typography>
+                <Box sx={{ textAlign: 'center', py: 2 }}>
+                  <Typography variant="h2" sx={{ fontWeight: 900, color: analysis.reversal?.reversalProbability > 50 ? '#ef5350' : '#089981' }}>
+                    {analysis.reversal?.reversalProbability}%
+                  </Typography>
+                  <Chip label={analysis.reversal?.reversalRiskLabel} color={analysis.reversal?.reversalProbability > 50 ? 'error' : 'success'} sx={{ fontWeight: 800, mt: 1 }} />
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Card sx={{ border: '1px solid #2a2e39', height: '100%' }}>
+              <CardContent sx={{ p: 2.5 }}>
+                <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>AI Reversal Verdict</Typography>
+                <Paper sx={{ p: 2, bgcolor: '#0d1117', border: '1px solid #2a2e39' }}>
+                  <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
+                    {analysis.reversal?.aiReversalVerdict}
+                  </Typography>
+                </Paper>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      )}
       {activeTab === 1 && (
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
