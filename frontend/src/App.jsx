@@ -18,6 +18,7 @@ import GlobalEventsView from './modules/global/GlobalEventsView';
 import AlertsView from './modules/alerts/AlertsView';
 import TimelineView from './modules/timeline/TimelineView';
 import { ResearchView } from './modules/research/ResearchView';
+import { OptionsView } from './modules/options/OptionsView';
 
 const AppContent = () => {
   const [activeModule, setActiveModule] = useState('dashboard');
@@ -49,6 +50,8 @@ const AppContent = () => {
         return <TimelineView />;
       case 'research':
         return <ResearchView />;
+      case 'options':
+        return <OptionsView />;
       default:
         return <DashboardView />;
     }

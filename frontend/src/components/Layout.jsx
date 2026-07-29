@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, Drawer, AppBar, Toolbar, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, Avatar, Button, IconButton, Chip, Divider, Tooltip } from '@mui/material';
+import GoogleIcon from '@mui/icons-material/Google';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
@@ -19,6 +20,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
 import { useAuth } from '../context/AuthContext';
 import { useMarket } from '../context/MarketContext';
 
@@ -73,7 +75,7 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
   };
 
   const handleGoogleLogin = () => {
-    loginWithGoogle({ credential: 'mock-google-credential' });
+    loginWithGoogle();
   };
 
   const getMoodColor = (mood) => {
@@ -113,6 +115,7 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
   const menuItems = [
     { id: 'dashboard', text: 'Dashboard',              icon: <DashboardIcon /> },
     { id: 'research',  text: '🧠 Research Engine',     icon: <AutoAwesomeIcon sx={{ color: '#2962ff' }} /> },
+    { id: 'options',   text: '⚡ Options Trading AI',  icon: <ShowChartIcon sx={{ color: '#f9a825' }} /> },
     { id: 'agents',    text: 'AI Agent Network',       icon: <AccountTreeIcon /> },
     { id: 'scanner',   text: 'AI Market Scanner',      icon: <FlashOnIcon /> },
     { id: 'news',      text: 'AI Analyzed News',       icon: <NewspaperIcon /> },
@@ -326,20 +329,37 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
             {/* Google Authentication */}
             {user ? (
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Avatar alt={user.name} src={user.picture} sx={{ width: 28, height: 28, border: '1px solid #2962ff' }} />
-                <IconButton onClick={logout} size="small" sx={{ color: 'text.secondary' }}>
-                  <LogoutIcon sx={{ fontSize: '1rem' }} />
-                </IconButton>
+                <Tooltip title={`${user.name} (${user.email})`}>
+                  <Avatar alt={user.name} src={user.picture} sx={{ width: 30, height: 30, border: '2px solid #2962ff', cursor: 'pointer' }} />
+                </Tooltip>
+                <Typography variant="caption" sx={{ color: 'text.secondary', display: { xs: 'none', lg: 'block' }, maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600 }}>
+                  {user.givenName || user.name}
+                </Typography>
+                <Tooltip title="Sign out">
+                  <IconButton onClick={logout} size="small" sx={{ color: 'text.secondary' }}>
+                    <LogoutIcon sx={{ fontSize: '1rem' }} />
+                  </IconButton>
+                </Tooltip>
               </Box>
             ) : (
               <Button
                 variant="outlined"
-                color="primary"
                 size="small"
                 onClick={handleGoogleLogin}
-                sx={{ border: '1px solid #2a2e39', color: '#f0f3fa', fontSize: '0.75rem', py: 0.4, px: 1.2, '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.05)', borderColor: '#b2b5be' } }}
+                startIcon={<GoogleIcon sx={{ fontSize: '0.9rem' }} />}
+                sx={{
+                  border: '1px solid #2a2e39',
+                  color: '#f0f3fa',
+                  fontSize: '0.75rem',
+                  py: 0.5,
+                  px: 1.5,
+                  borderRadius: 2,
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.06)', borderColor: '#4285f4' }
+                }}
               >
-                Sign In
+                Sign in with Google
               </Button>
             )}
           </Box>
