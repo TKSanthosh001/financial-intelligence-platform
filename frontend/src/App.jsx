@@ -24,6 +24,7 @@ import { FinancialIntelligenceView } from './modules/financials/FinancialIntelli
 import { TechnicalView } from './modules/technical/TechnicalView';
 import { LiveMarketTerminalView } from './modules/terminal/LiveMarketTerminalView';
 import { MarketBrainView } from './modules/brain/MarketBrainView';
+import { LiveTradeDecisionView } from './modules/decision/LiveTradeDecisionView';
 
 const AppContent = () => {
   const [activeModule, setActiveModule] = useState('dashboard');
@@ -67,6 +68,8 @@ const AppContent = () => {
         return <LiveMarketTerminalView />;
       case 'brain':
         return <MarketBrainView />;
+      case 'decision':
+        return <LiveTradeDecisionView />;
       default:
         return <DashboardView />;
     }

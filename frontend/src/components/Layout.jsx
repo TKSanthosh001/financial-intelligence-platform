@@ -117,6 +117,7 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
   const menuItems = [
     { id: 'dashboard', text: 'Dashboard',              icon: <DashboardIcon /> },
     { id: 'brain',     text: '🧠 Market Brain AI',     icon: <PsychologyIcon sx={{ color: '#2962ff' }} /> },
+    { id: 'decision',  text: '🎯 Live AI Decision Engine', icon: <FlashOnIcon sx={{ color: '#089981' }} /> },
     { id: 'research',  text: '🧠 Research Engine',     icon: <AutoAwesomeIcon sx={{ color: '#2962ff' }} /> },
     { id: 'options',   text: '⚡ Options Trading AI',  icon: <ShowChartIcon sx={{ color: '#f9a825' }} /> },
     { id: 'engine',    text: '📡 Market Data Engine',  icon: <SpeedIcon sx={{ color: '#00b0ff' }} /> },
