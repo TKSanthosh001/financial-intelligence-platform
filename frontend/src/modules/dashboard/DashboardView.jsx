@@ -12,6 +12,7 @@ import * as echarts from 'echarts';
 import { useMarket } from '../../context/MarketContext';
 import FearGreedGauge from '../../components/FearGreedGauge';
 import TrendIndicator from '../../components/TrendIndicator';
+import { InstitutionalSnapshotCard } from '../../components/InstitutionalSnapshotCard';
 
 export const DashboardView = () => {
   const { 
@@ -129,6 +130,9 @@ export const DashboardView = () => {
 
   return (
     <Box sx={{ animation: 'fadeIn 0.5s ease-out' }}>
+      {/* ── High-Conviction Institutional Market Snapshot ── */}
+      <InstitutionalSnapshotCard />
+
       {/* Dynamic Morning Briefing & Fear/Greed */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={12} md={8}>
