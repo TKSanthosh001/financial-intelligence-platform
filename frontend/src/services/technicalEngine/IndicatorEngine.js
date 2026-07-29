@@ -129,10 +129,23 @@ export class IndicatorEngine {
   }
 
   calcMACD(data) {
-    const ema12 = this.calcEMA(data, 12);
-    const ema26 = this.calcEMA(data, 26);
-    const macdLine = ema12 - ema26;
-    const signalLine = macdLine * 0.8; // approximated signal
+    if (data.length < 26) {
+      return { line: 0, signal: 0, histogram: 0 };
+    }
+    const macdSeries = [];
+    const k12 = 2 / 13;
+    const k26 = 2 / 27;
+    let ema12 = this.calcSMA(data.slice(0, 12), 12);
+    let ema26 = this.calcSMA(data.slice(0, 26), 26);
+
+    for (let i = 26; i < data.length; i++) {
+      ema12 = data[i] * k12 + ema12 * (1 - k12);
+      ema26 = data[i] * k26 + ema26 * (1 - k26);
+      macdSeries.push(ema12 - ema26);
+    }
+
+    const macdLine = macdSeries.length > 0 ? macdSeries[macdSeries.length - 1] : 0;
+    const signalLine = macdSeries.length >= 9 ? this.calcEMA(macdSeries, 9) : macdLine * 0.8;
     return { line: macdLine, signal: signalLine, histogram: macdLine - signalLine };
   }
 

@@ -76,6 +76,22 @@ const generateOptionsChain = (index) => {
     const ceOI = Math.round((800000 + Math.random() * 400000) * (isRound ? 1.8 : 1));
     const peOI = Math.round((750000 + Math.random() * 350000) * (isRound ? 1.7 : 1));
 
+    // Realistic Option Delta calculations
+    let ceDelta, peDelta;
+    if (strike < spot) {
+      // CE ITM, PE OTM
+      ceDelta = parseFloat((0.50 + 0.45 * Math.min(1, distFromSpot / (spot * 0.04))).toFixed(2));
+      peDelta = parseFloat((-0.50 + 0.45 * Math.min(1, distFromSpot / (spot * 0.04))).toFixed(2));
+    } else if (strike > spot) {
+      // CE OTM, PE ITM
+      ceDelta = parseFloat((0.50 - 0.45 * Math.min(1, distFromSpot / (spot * 0.04))).toFixed(2));
+      peDelta = parseFloat((-0.50 - 0.45 * Math.min(1, distFromSpot / (spot * 0.04))).toFixed(2));
+    } else {
+      // ATM
+      ceDelta = 0.50;
+      peDelta = -0.50;
+    }
+
     strikes.push({
       strike,
       moneyness: i === 0 ? 'ATM' : moneyness,
@@ -84,7 +100,7 @@ const generateOptionsChain = (index) => {
         oi: ceOI,
         oiChange: Math.round((Math.random() - 0.4) * 50000),
         iv: parseFloat((iv + Math.random() * 3).toFixed(1)),
-        delta: parseFloat((Math.max(0.05, 1 - (distFromSpot / (spot * 0.04)))).toFixed(2)),
+        delta: Math.max(0.05, Math.min(0.95, ceDelta)),
         theta: parseFloat((-timeValue / timeToExpiry * 0.7).toFixed(2)),
         volume: Math.round(50000 + Math.random() * 100000),
       },
@@ -93,7 +109,7 @@ const generateOptionsChain = (index) => {
         oi: peOI,
         oiChange: Math.round((Math.random() - 0.45) * 45000),
         iv: parseFloat((iv + Math.random() * 3 + 1).toFixed(1)),
-        delta: parseFloat((-Math.max(0.05, 1 - (distFromSpot / (spot * 0.04)))).toFixed(2)),
+        delta: Math.min(-0.05, Math.max(-0.95, peDelta)),
         theta: parseFloat((-timeValue / timeToExpiry * 0.7).toFixed(2)),
         volume: Math.round(40000 + Math.random() * 90000),
       },

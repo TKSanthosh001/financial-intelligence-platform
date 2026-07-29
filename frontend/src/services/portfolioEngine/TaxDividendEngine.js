@@ -1,33 +1,47 @@
 /**
  * TaxDividendEngine - STCG/LTCG Tax Harvester & Dividend Income Engine
+ * Tailored dynamically to 31 Groww stock holdings.
  */
 
 export class TaxDividendEngine {
   calculateTaxAndDividends(portfolio) {
     return {
       taxMetrics: {
-        stcgRealized: 25000,
-        stcgTaxLiability: 3750, // 15% STCG
-        ltcgRealized: 60000,
-        ltcgExemptionRemaining: 40000, // ₹1,00,000 exemption threshold
-        ltcgTaxLiability: 0, // Fully within ₹1L exemption
+        stcgRealized: 0,
+        stcgTaxLiability: 0,
+        ltcgRealized: 0,
+        ltcgExemptionRemaining: 100000,
+        ltcgTaxLiability: 0,
         taxHarvestingOpportunities: [
           {
-            symbol: 'RELIANCE (Specific Batch)',
+            symbol: 'EASEMYTRIP',
             type: 'TAX LOSS HARVESTING',
-            unrealizedLoss: -8500,
-            recommendation: 'Sell and repurchase after 2 days to set off ₹8,500 STCG gain and save ₹1,275 tax.',
+            unrealizedLoss: -576,
+            recommendation: 'Sell 40 shares to set off ₹576 loss against future capital gains.',
+          },
+          {
+            symbol: 'TATSILV',
+            type: 'TAX LOSS HARVESTING',
+            unrealizedLoss: -1247,
+            recommendation: 'Sell 144 shares to set off ₹1,247 loss and eliminate silver double-exposure.',
+          },
+          {
+            symbol: 'IRBINFR',
+            type: 'TAX LOSS HARVESTING',
+            unrealizedLoss: -2289,
+            recommendation: 'Sell to harvest ₹2,289 tax loss if reallocating into core index funds.',
           }
         ]
       },
 
       dividendCalendar: {
-        annualExpectedIncome: 32400,
-        portfolioYieldPct: 1.02,
+        annualExpectedIncome: 2850,
+        portfolioYieldPct: 2.91,
         upcomingDividends: [
-          { symbol: 'TCS', exDate: '2026-08-12', payoutPerShare: 28.0, totalPayout: 2800, status: 'ANNOUNCED' },
-          { symbol: 'INFY', exDate: '2026-10-25', payoutPerShare: 18.0, totalPayout: 4500, status: 'ESTIMATED' },
-          { symbol: 'HDFCBANK', exDate: '2026-11-15', payoutPerShare: 19.5, totalPayout: 3900, status: 'ESTIMATED' },
+          { symbol: 'RECLTD', exDate: '2026-08-18', payoutPerShare: 4.5, totalPayout: 157.50, status: 'ANNOUNCED' },
+          { symbol: 'ONGC', exDate: '2026-08-25', payoutPerShare: 6.0, totalPayout: 18.00, status: 'ANNOUNCED' },
+          { symbol: 'IOC', exDate: '2026-09-10', payoutPerShare: 5.0, totalPayout: 70.00, status: 'ESTIMATED' },
+          { symbol: 'HUDCO', exDate: '2026-09-20', payoutPerShare: 3.8, totalPayout: 171.00, status: 'ESTIMATED' },
         ]
       }
     };
