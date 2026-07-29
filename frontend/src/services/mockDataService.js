@@ -121,36 +121,67 @@ export const mockAiAnalysisEngine = {
 };
 
 export const mockPortfolio = {
+  summary: {
+    totalInvestment: 103002.00,
+    currentValue: 97845.00,
+    totalProfit: -5157.08,
+    absoluteReturnPct: -5.01,
+  },
   holdings: [
-    { symbol: 'RELIANCE', name: 'Reliance Industries Ltd.', type: 'Stock', category: 'Energy/Conglomerate', avgPrice: 2450.00, currentPrice: 2580.40, qty: 50 },
-    { symbol: 'HDFCBANK', name: 'HDFC Bank Ltd.', type: 'Stock', category: 'Private Banking', avgPrice: 1550.00, currentPrice: 1610.20, qty: 80 },
-    { symbol: 'INFY', name: 'Infosys Ltd.', type: 'Stock', category: 'IT Services', avgPrice: 1420.00, currentPrice: 1512.60, qty: 60 },
-    { symbol: 'TATASTEEL', name: 'Tata Steel Ltd.', type: 'Stock', category: 'Metals & Mining', avgPrice: 160.00, currentPrice: 145.30, qty: 300 },
-    { symbol: 'NIPPON_ETF', name: 'Nippon India Nifty 50 ETF', type: 'Fund', category: 'Index Fund', avgPrice: 220.00, currentPrice: 242.30, qty: 500 }
+    { symbol: 'KALYANKJIL', name: 'Kalyan Jewellers India', type: 'Stock', category: 'Consumer & Retail', avgPrice: 396.59, currentPrice: 608.35, qty: 10 },
+    { symbol: 'SAIL', name: 'Steel Authority of India', type: 'Stock', category: 'Metals & Mining', avgPrice: 140.60, currentPrice: 165.85, qty: 7 },
+    { symbol: 'GAIL', name: 'GAIL (India) Ltd', type: 'Stock', category: 'Power & Renewable Energy', avgPrice: 184.64, currentPrice: 175.15, qty: 17 },
+    { symbol: 'IREDA', name: 'Indian Renewable Energy Dev', type: 'Stock', category: 'Power & Renewable Energy', avgPrice: 185.33, currentPrice: 120.49, qty: 10 },
+    { symbol: 'ONGC', name: 'Oil & Natural Gas Corp', type: 'Stock', category: 'Power & Renewable Energy', avgPrice: 238.81, currentPrice: 238.91, qty: 3 },
+    { symbol: 'RECLTD', name: 'REC Limited', type: 'Stock', category: 'PSU & Infrastructure', avgPrice: 363.73, currentPrice: 368.45, qty: 35 },
+    { symbol: 'EMBASSY', name: 'Embassy Developments', type: 'Stock', category: 'Speculative Small-Cap Equities', avgPrice: 154.69, currentPrice: 62.12, qty: 5 },
+    { symbol: 'CASTROLIND', name: 'Castrol India Ltd', type: 'Stock', category: 'Consumer & Retail', avgPrice: 190.23, currentPrice: 184.06, qty: 11 },
+    { symbol: 'KMCSPL', name: 'KMC Speciality Hospitals', type: 'Stock', category: 'Healthcare', avgPrice: 86.26, currentPrice: 130.25, qty: 4 },
+    { symbol: 'IOC', name: 'Indian Oil Corp Ltd', type: 'Stock', category: 'Power & Renewable Energy', avgPrice: 151.64, currentPrice: 141.28, qty: 14 },
+    { symbol: 'ITC', name: 'ITC Limited', type: 'Stock', category: 'Consumer & Retail', avgPrice: 360.13, currentPrice: 284.65, qty: 10 },
+    { symbol: 'SBIN', name: 'State Bank of India', type: 'Stock', category: 'Banking & Financials', avgPrice: 849.10, currentPrice: 1013.20, qty: 1 },
+    { symbol: 'IRBINFR', name: 'IRB Infrastructure Dev', type: 'Stock', category: 'PSU & Infrastructure', avgPrice: 33.58, currentPrice: 19.45, qty: 162 },
+    { symbol: 'TATASTEEL', name: 'Tata Steel Ltd', type: 'Stock', category: 'Metals & Mining', avgPrice: 155.55, currentPrice: 182.63, qty: 3 },
+    { symbol: 'IRFC', name: 'Indian Railway Finance Corp', type: 'Stock', category: 'PSU & Infrastructure', avgPrice: 146.16, currentPrice: 87.15, qty: 20 },
+    { symbol: 'RTNPOWER', name: 'RattanIndia Power', type: 'Stock', category: 'Speculative Small-Cap Equities', avgPrice: 17.30, currentPrice: 8.51, qty: 10 },
+    { symbol: 'NALCO', name: 'National Aluminium Co', type: 'Stock', category: 'Metals & Mining', avgPrice: 157.76, currentPrice: 334.55, qty: 5 },
+    { symbol: 'GOLDBEES', name: 'Nippon India ETF Gold BeES', type: 'ETF', category: 'Precious Metals', avgPrice: 105.48, currentPrice: 116.83, qty: 142 },
+    { symbol: 'TATAPOWER', name: 'Tata Power Co Ltd', type: 'Stock', category: 'Power & Renewable Energy', avgPrice: 375.18, currentPrice: 371.35, qty: 11 },
+    { symbol: 'IRCTC', name: 'Indian Railway Catering & Tour', type: 'Stock', category: 'PSU & Infrastructure', avgPrice: 830.99, currentPrice: 485.95, qty: 4 },
+    { symbol: 'ENGINERSIN', name: 'Engineers India Ltd', type: 'Stock', category: 'PSU & Infrastructure', avgPrice: 178.91, currentPrice: 222.59, qty: 14 },
+    { symbol: 'NHPC', name: 'NHPC Limited', type: 'Stock', category: 'Power & Renewable Energy', avgPrice: 103.85, currentPrice: 78.28, qty: 106 },
+    { symbol: 'VASCONEQ', name: 'Vascon Engineers Ltd', type: 'Stock', category: 'Speculative Small-Cap Equities', avgPrice: 79.00, currentPrice: 31.92, qty: 10 },
+    { symbol: 'HINDCOPPER', name: 'Hindustan Copper Ltd', type: 'Stock', category: 'Metals & Mining', avgPrice: 491.96, currentPrice: 473.15, qty: 7 },
+    { symbol: 'UJJIVANSFB', name: 'Ujjivan Small Finance Bank', type: 'Stock', category: 'Banking & Financials', avgPrice: 52.90, currentPrice: 70.12, qty: 10 },
+    { symbol: 'TATSILV', name: 'Tata Silver ETF', type: 'ETF', category: 'Precious Metals', avgPrice: 29.60, currentPrice: 20.94, qty: 144 },
+    { symbol: 'SILVERBEES', name: 'Nippon India Silver ETF', type: 'ETF', category: 'Precious Metals', avgPrice: 125.39, currentPrice: 206.20, qty: 26 },
+    { symbol: 'SEL', name: 'Steel Exchange India', type: 'Stock', category: 'Speculative Small-Cap Equities', avgPrice: 14.59, currentPrice: 11.20, qty: 50 },
+    { symbol: 'EASEMYTRIP', name: 'Easy Trip Planners Ltd', type: 'Stock', category: 'Speculative Small-Cap Equities', avgPrice: 20.99, currentPrice: 6.59, qty: 40 },
+    { symbol: 'HUDCO', name: 'Housing & Urban Dev Corp', type: 'Stock', category: 'PSU & Infrastructure', avgPrice: 210.86, currentPrice: 194.45, qty: 45 },
+    { symbol: 'EQUITASBNK', name: 'Equitas Small Finance Bank', type: 'Stock', category: 'Banking & Financials', avgPrice: 94.01, currentPrice: 74.63, qty: 8 }
   ],
   aiAnalysis: {
     sectorAllocation: [
-      { name: 'Financial Services', value: 28 },
-      { name: 'Energy', value: 25 },
-      { name: 'IT Services', value: 18 },
-      { name: 'Index Funds', value: 20 },
-      { name: 'Metals', value: 9 }
+      { name: 'Precious Metals (Gold & Silver)', value: 25.5 },
+      { name: 'Power & Renewable Energy', value: 25.1 },
+      { name: 'PSU & Infrastructure', value: 24.2 },
+      { name: 'Consumer & Retail', value: 9.1 },
+      { name: 'Metals & Mining', value: 6.9 },
+      { name: 'Speculative Small-Cap Equities', value: 6.8 },
+      { name: 'Banking & Financials', value: 2.4 }
     ],
     countryAllocation: [
-      { name: 'India', value: 90 },
-      { name: 'US (via Tech/ADR)', value: 10 }
+      { name: 'India', value: 100 }
     ],
-    riskScore: 'Moderate (5.8/10)',
-    diversificationStatus: 'Well Diversified',
+    riskScore: 'High (7.2/10)',
+    diversificationStatus: 'Over-Diversified (31 Stocks)',
     warnings: [
-      { type: 'Over-Concentration', message: 'Reliance and HDFC Bank account for over 50% of your individual stock portfolio. A sector shock in Banking or Energy will heavily impact returns.' },
-      { type: 'Underperformance Risk', message: 'Tata Steel is down 9.2% from your purchase price. Steel pricing cycle is currently weak due to slowing demand in China.' }
+      { type: 'Double Silver Exposure', message: 'You are holding both SILVERBEES and TATSILV. These instruments track the exact same silver prices and provide zero diversification.' },
+      { type: 'Small-Cap Drag', message: 'EaseMyTrip (-68.6%), Embassy (-59.8%), Vascon (-59.6%) and RattanIndia Power (-50.8%) are dragging total portfolio performance.' }
     ],
-    duplicateHoldings: 'No major overlap found. However, Nippon ETF and individual holdings (Reliance, HDFC Bank, Infosys) overlap. You are indirectly holding more Reliance through the ETF.',
     suggestions: [
-      { action: 'Trim', symbol: 'RELIANCE', reason: 'Take partial profits and reduce stock weight below 15% to manage concentration risk.' },
-      { action: 'Buy', symbol: 'FMCG / Pharma Stocks', reason: 'Allocate 10% cash to defensive sectors (like ITC or Sun Pharma) to hedge against geopolitical inflation spikes.' },
-      { action: 'Hold', symbol: 'INFY', reason: 'IT services are recovering. Hold and ride the upward constant-currency guidance cycle.' }
+      { action: 'Sell / Tax Harvest', symbol: 'TATSILV', reason: 'Consolidate silver allocation into SILVERBEES to eliminate overlap.' },
+      { action: 'Consolidate Micro Positions', symbol: 'SBI / Nifty BeES', reason: 'Consolidate 1-5 share micro positions into core market indices.' }
     ]
   }
 };
