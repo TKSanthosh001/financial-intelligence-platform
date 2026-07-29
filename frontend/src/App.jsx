@@ -30,11 +30,13 @@ import { MarketOSView } from './modules/marketOS/MarketOSView';
 import { TraderThinkingView } from './modules/traderThinking/TraderThinkingView';
 
 const AppContent = () => {
-  const [activeModule, setActiveModule] = useState('dashboard');
+  const [activeModule, setActiveModule] = useState('commandCenter');
   const { loading, error } = useMarket();
 
   const renderModule = () => {
     switch (activeModule) {
+      case 'commandCenter':
+        return <LiveCommandCenterView />;
       case 'dashboard':
         return <DashboardView />;
       case 'agents':
@@ -80,7 +82,7 @@ const AppContent = () => {
       case 'thinking':
         return <TraderThinkingView />;
       default:
-        return <DashboardView />;
+        return <LiveCommandCenterView />;
     }
   };
 
