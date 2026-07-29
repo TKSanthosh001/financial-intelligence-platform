@@ -75,8 +75,6 @@ const AppContent = () => {
         return <MarketBrainView />;
       case 'decision':
         return <LiveTradeDecisionView />;
-      case 'commandCenter':
-        return <LiveCommandCenterView />;
       case 'marketOS':
         return <MarketOSView />;
       case 'thinking':
