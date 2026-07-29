@@ -117,6 +117,7 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
   const menuItems = [
     { id: 'dashboard', text: 'Dashboard',              icon: <DashboardIcon /> },
     { id: 'commandCenter', text: '🚀 Live Command Center', icon: <PsychologyIcon sx={{ color: '#089981' }} /> },
+    { id: 'marketOS',  text: '⚙️ 24x7 MarketOS Terminal', icon: <MemoryIcon sx={{ color: '#ab47bc' }} /> },
     { id: 'brain',     text: '🧠 Market Brain AI',     icon: <PsychologyIcon sx={{ color: '#2962ff' }} /> },
     { id: 'decision',  text: '🎯 Live AI Decision Engine', icon: <FlashOnIcon sx={{ color: '#089981' }} /> },
     { id: 'research',  text: '🧠 Research Engine',     icon: <AutoAwesomeIcon sx={{ color: '#2962ff' }} /> },
