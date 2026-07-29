@@ -20,6 +20,7 @@ import TimelineView from './modules/timeline/TimelineView';
 import { ResearchView } from './modules/research/ResearchView';
 import { OptionsView } from './modules/options/OptionsView';
 import { MarketEngineView } from './modules/engine/MarketEngineView';
+import { FinancialIntelligenceView } from './modules/financials/FinancialIntelligenceView';
 
 const AppContent = () => {
   const [activeModule, setActiveModule] = useState('dashboard');
@@ -55,6 +56,8 @@ const AppContent = () => {
         return <OptionsView />;
       case 'engine':
         return <MarketEngineView />;
+      case 'financials':
+        return <FinancialIntelligenceView />;
       default:
         return <DashboardView />;
     }
