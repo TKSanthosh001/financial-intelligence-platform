@@ -27,6 +27,7 @@ import { MarketBrainView } from './modules/brain/MarketBrainView';
 import { LiveTradeDecisionView } from './modules/decision/LiveTradeDecisionView';
 import { LiveCommandCenterView } from './modules/commandCenter/LiveCommandCenterView';
 import { MarketOSView } from './modules/marketOS/MarketOSView';
+import { TraderThinkingView } from './modules/traderThinking/TraderThinkingView';
 
 const AppContent = () => {
   const [activeModule, setActiveModule] = useState('dashboard');
@@ -76,6 +77,8 @@ const AppContent = () => {
         return <LiveCommandCenterView />;
       case 'marketOS':
         return <MarketOSView />;
+      case 'thinking':
+        return <TraderThinkingView />;
       default:
         return <DashboardView />;
     }
