@@ -119,6 +119,7 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
     { id: 'research',  text: '🧠 Research Engine',     icon: <AutoAwesomeIcon sx={{ color: '#2962ff' }} /> },
     { id: 'options',   text: '⚡ Options Trading AI',  icon: <ShowChartIcon sx={{ color: '#f9a825' }} /> },
     { id: 'engine',    text: '📡 Market Data Engine',  icon: <SpeedIcon sx={{ color: '#00b0ff' }} /> },
+    { id: 'terminal',  text: '⚡ Live Market Terminal',icon: <FlashOnIcon sx={{ color: '#f9a825' }} /> },
     { id: 'financials',text: '🏛️ Financial Intelligence',icon: <AccountBalanceIcon sx={{ color: '#ab47bc' }} /> },
     { id: 'technical', text: '📈 Chart Intelligence AI',icon: <ShowChartIcon sx={{ color: '#089981' }} /> },
     { id: 'agents',    text: 'AI Agent Network',       icon: <AccountTreeIcon /> },
