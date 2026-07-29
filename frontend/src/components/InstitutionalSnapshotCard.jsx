@@ -113,13 +113,13 @@ export const InstitutionalSnapshotCard = () => {
             <Typography variant="caption" sx={{ color: '#2962ff', fontWeight: 900, letterSpacing: '0.08em', display: 'flex', alignItems: 'center', gap: 0.75, mb: 1.5 }}>
               💼 PORTFOLIO SUMMARY
             </Typography>
-            <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>Groww Net Worth</Typography>
-            <Typography variant="h4" sx={{ fontWeight: 900, color: '#f0f3fa', mb: 0.5 }}>₹97,845</Typography>
-            <Typography variant="body2" sx={{ fontWeight: 800, color: '#089981', mb: 1 }}>+1.32% Today (₹1,03,200 Inv)</Typography>
+            <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>Verified Groww Net Worth</Typography>
+            <Typography variant="h4" sx={{ fontWeight: 900, color: '#f0f3fa', mb: 0.5 }}>₹97,845.00</Typography>
+            <Typography variant="body2" sx={{ fontWeight: 800, color: '#ef5350', mb: 1 }}>-0.96% Today (-₹5,157 Total P&L)</Typography>
             <Divider sx={{ borderColor: '#2a2e39', my: 1 }} />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Typography variant="caption" sx={{ color: 'text.disabled' }}>Groww Portfolio Health</Typography>
-              <Chip label="88% HEALTH" color="success" size="small" sx={{ fontWeight: 900, fontSize: '0.6rem', height: 18 }} />
+              <Chip label="72% HEALTH" color="warning" size="small" sx={{ fontWeight: 900, fontSize: '0.6rem', height: 18 }} />
             </Box>
           </Box>
         </Grid>
