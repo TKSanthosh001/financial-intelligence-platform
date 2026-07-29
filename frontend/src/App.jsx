@@ -21,6 +21,7 @@ import { ResearchView } from './modules/research/ResearchView';
 import { OptionsView } from './modules/options/OptionsView';
 import { MarketEngineView } from './modules/engine/MarketEngineView';
 import { FinancialIntelligenceView } from './modules/financials/FinancialIntelligenceView';
+import { TechnicalView } from './modules/technical/TechnicalView';
 
 const AppContent = () => {
   const [activeModule, setActiveModule] = useState('dashboard');
@@ -58,6 +59,8 @@ const AppContent = () => {
         return <MarketEngineView />;
       case 'financials':
         return <FinancialIntelligenceView />;
+      case 'technical':
+        return <TechnicalView />;
       default:
         return <DashboardView />;
     }
