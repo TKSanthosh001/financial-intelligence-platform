@@ -21,6 +21,7 @@ import FlashOnIcon from '@mui/icons-material/FlashOn';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
+import SpeedIcon from '@mui/icons-material/Speed';
 import { useAuth } from '../context/AuthContext';
 import { useMarket } from '../context/MarketContext';
 
@@ -116,6 +117,7 @@ export const Layout = ({ children, activeModule, setActiveModule }) => {
     { id: 'dashboard', text: 'Dashboard',              icon: <DashboardIcon /> },
     { id: 'research',  text: '🧠 Research Engine',     icon: <AutoAwesomeIcon sx={{ color: '#2962ff' }} /> },
     { id: 'options',   text: '⚡ Options Trading AI',  icon: <ShowChartIcon sx={{ color: '#f9a825' }} /> },
+    { id: 'engine',    text: '📡 Market Data Engine',  icon: <SpeedIcon sx={{ color: '#00b0ff' }} /> },
     { id: 'agents',    text: 'AI Agent Network',       icon: <AccountTreeIcon /> },
     { id: 'scanner',   text: 'AI Market Scanner',      icon: <FlashOnIcon /> },
     { id: 'news',      text: 'AI Analyzed News',       icon: <NewspaperIcon /> },

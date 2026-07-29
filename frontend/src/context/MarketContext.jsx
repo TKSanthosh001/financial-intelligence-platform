@@ -1,6 +1,8 @@
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import api from '../services/api';
 import * as mock from '../services/mockDataService';
+import marketDataEngine from '../services/marketEngine/MarketDataEngine';
+import eventBus from '../services/marketEngine/EventBus';
 
 const MarketContext = createContext();
 
@@ -122,8 +124,44 @@ export const MarketProvider = ({ children }) => {
     }
   };
 
+
+
   useEffect(() => {
     fetchAllData();
+    marketDataEngine.init(['INFY', 'TCS', 'RELIANCE', 'HDFCBANK', 'ICICIBANK']);
+
+    // Subscribe to live market engine events
+    const unsubQuote = eventBus.on('market:quote_updated', (quote) => {
+      setMarketStatus(prev => {
+        if (!prev || !prev.indices) return prev;
+        const updatedIndices = prev.indices.map(idx => {
+          if (idx.id === quote.symbol.toLowerCase() || idx.name.toLowerCase().includes(quote.symbol.toLowerCase())) {
+            return { ...idx, price: quote.price.toLocaleString('en-IN'), pctChange: `${quote.pctChange}%`, trend: quote.change >= 0 ? 'up' : 'down' };
+          }
+          return idx;
+        });
+        return { ...prev, indices: updatedIndices };
+      });
+    });
+
+    const unsubNews = eventBus.on('market:news', (newNews) => {
+      if (Array.isArray(newNews) && newNews.length > 0) {
+        setNews(prev => [...newNews, ...prev].slice(0, 20));
+      }
+    });
+
+    const unsubAiTrigger = eventBus.on('ai:trigger', (trigger) => {
+      setAlerts(prev => [
+        { id: trigger.timestamp, title: trigger.title, type: trigger.type, severity: trigger.severity, time: 'Just now' },
+        ...prev
+      ].slice(0, 30));
+    });
+
+    return () => {
+      unsubQuote();
+      unsubNews();
+      unsubAiTrigger();
+    };
   }, [fetchAllData]);
 
   const value = {
